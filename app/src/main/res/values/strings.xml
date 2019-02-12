@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">nuntium</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_add_participant_view">AddParticipantView</string>
+    <string name="create_participant_button">Create Participant</string>
+    <string name="create_participant_explaination">Please fill in your name and email address in the fields below to create a new participant. As a participant you are able to take part in conversations with other participants.</string>
 </resources>

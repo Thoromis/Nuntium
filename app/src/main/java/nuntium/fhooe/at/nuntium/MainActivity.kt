@@ -1,5 +1,6 @@
 package nuntium.fhooe.at.nuntium
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +8,7 @@ import android.view.Menu
 import android.view.MenuItem
 
 import kotlinx.android.synthetic.main.activity_main.*
+import nuntium.fhooe.at.nuntium.addparticipant.mvvm.AddParticipantView
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,6 +20,8 @@ class MainActivity : AppCompatActivity() {
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
+            val intent = Intent(this, AddParticipantView::class.java)
+            startActivity(intent)
         }
     }
 
