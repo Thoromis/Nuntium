@@ -4,4 +4,10 @@
     <string name="title_activity_add_participant_view">AddParticipantView</string>
     <string name="create_participant_button">Create Participant</string>
     <string name="create_participant_explaination">Please fill in your name and email address in the fields below to create a new participant. As a participant you are able to take part in conversations with other participants.</string>
+    <string name="create_participant_success_message">Participant created successfully!</string>
+    <string name="create_participant_error_message">Please fill in all data correctly!</string>
+    <string name="create_participant_internet_error_message">An error occureded while trying to send your data. Please
+        check your internet connection and try again.
+    </string>
+    <string name="create_participant_networkcall_message">Sending your data to the server...</string>
 </resources>

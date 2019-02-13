@@ -15,29 +15,29 @@
             android:inputType="textEmailAddress"
             android:ems="10"
             android:id="@+id/create_participant_et_email"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toEndOf="parent" android:layout_marginStart="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@+id/textView"
             android:hint="Email address"
-            android:importantForAutofill="no"/>
+            android:importantForAutofill="no" android:layout_margin="8dp" />
     <EditText
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
             android:ems="10"
-            android:id="@+id/create_participant_et_firstname" android:layout_marginStart="8dp"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/create_participant_et_email" android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toEndOf="parent" android:hint="Firstname" android:importantForAutofill="no"/>
+            android:id="@+id/create_participant_et_firstname"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/create_participant_et_email"
+            app:layout_constraintEnd_toEndOf="parent" android:hint="Firstname" android:importantForAutofill="no"
+            android:layout_margin="8dp" />
     <EditText
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
             android:inputType="textPersonName"
             android:ems="10"
-            android:id="@+id/create_participant_et_lastname" android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toEndOf="parent" android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/create_participant_et_firstname" android:layout_marginStart="8dp"
-            app:layout_constraintStart_toStartOf="parent" android:hint="Lastname" android:importantForAutofill="no"/>
+            android:id="@+id/create_participant_et_lastname"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/create_participant_et_firstname"
+            app:layout_constraintStart_toStartOf="parent" android:hint="Lastname" android:importantForAutofill="no"
+            android:layout_height="wrap_content" android:layout_margin="8dp"/>
     <TextView
             android:text="@string/create_participant_explaination"
             android:layout_width="wrap_content"
@@ -49,9 +49,19 @@
     <Button
             android:text="@string/create_participant_button"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="50dp"
             android:id="@+id/create_participant_bt_submit" app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" android:includeFontPadding="true"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginBottom="12dp" android:elevation="0dp"/>
+    <ProgressBar
+            style="?android:attr/progressBarStyle"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:id="@+id/create_participant_progress"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/create_participant_bt_submit"
+            android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/create_participant_et_lastname"
+            android:visibility="gone"/>
 </android.support.constraint.ConstraintLayout>
