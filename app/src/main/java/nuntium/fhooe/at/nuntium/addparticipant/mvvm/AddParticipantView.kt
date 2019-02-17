@@ -1,6 +1,7 @@
 package nuntium.fhooe.at.nuntium.addparticipant.mvvm
 
 import android.animation.ObjectAnimator
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import kotlinx.android.synthetic.main.activity_main.*
+import nuntium.fhooe.at.nuntium.MainActivity
 import nuntium.fhooe.at.nuntium.R
 import nuntium.fhooe.at.nuntium.Utils.shakeErrorView
 
@@ -54,6 +56,8 @@ class AddParticipantView : AppCompatActivity(), AddParticipantMVVM.View {
         viewModel = AddParticipantViewModel(this, this.applicationContext)
     }
 
+    override fun startConversationActivity() = finish()
+
     override fun startProgressWheel() {
         progressWheel?.visibility = View.VISIBLE
         spinAnimation?.start()
@@ -65,7 +69,7 @@ class AddParticipantView : AppCompatActivity(), AddParticipantMVVM.View {
     }
 
     override fun displayMessage(message: String) {
-        Snackbar.make(btSubmit as View, message, 2000)
+        Snackbar.make(btSubmit as View, message, 2000).show()
     }
 
     override fun shakeFirstname() {

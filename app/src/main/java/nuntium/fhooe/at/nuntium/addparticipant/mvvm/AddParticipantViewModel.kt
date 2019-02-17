@@ -12,6 +12,8 @@ class AddParticipantViewModel(val view: AddParticipantMVVM.View, val context: Co
         model = AddParticipantModel(this)
     }
 
+    override fun startConversationActivity() = view.startConversationActivity()
+
     override fun startProgressWheel() = view.startProgressWheel()
 
     override fun stopProgressWheel() = view.stopProgressWheel()

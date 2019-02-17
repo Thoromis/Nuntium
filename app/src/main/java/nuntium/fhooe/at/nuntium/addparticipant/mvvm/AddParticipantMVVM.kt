@@ -8,6 +8,7 @@ interface AddParticipantMVVM {
         fun shakeEmail()
         fun startProgressWheel()
         fun stopProgressWheel()
+        fun startConversationActivity()
     }
 
     interface Model {
@@ -23,6 +24,7 @@ interface AddParticipantMVVM {
         fun startProgressWheel()
         fun stopProgressWheel()
         fun shakeViews(views: List<Views>)
+        fun startConversationActivity()
     }
 
     enum class Views {
