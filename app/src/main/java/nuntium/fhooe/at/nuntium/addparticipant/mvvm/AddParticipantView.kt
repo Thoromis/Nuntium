@@ -1,7 +1,6 @@
 package nuntium.fhooe.at.nuntium.addparticipant.mvvm
 
 import android.animation.ObjectAnimator
-import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity;
@@ -10,9 +9,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import kotlinx.android.synthetic.main.activity_main.*
-import nuntium.fhooe.at.nuntium.MainActivity
 import nuntium.fhooe.at.nuntium.R
-import nuntium.fhooe.at.nuntium.Utils.shakeErrorView
+import nuntium.fhooe.at.nuntium.utils.shakeErrorView
 
 class AddParticipantView : AppCompatActivity(), AddParticipantMVVM.View {
     private lateinit var viewModel: AddParticipantMVVM.ViewModel

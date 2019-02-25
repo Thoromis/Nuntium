@@ -1,4 +1,4 @@
-package nuntium.fhooe.at.nuntium.Utils
+package nuntium.fhooe.at.nuntium.utils
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter

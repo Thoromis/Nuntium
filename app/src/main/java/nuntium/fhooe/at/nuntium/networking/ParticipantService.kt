@@ -1,6 +1,6 @@
 package nuntium.fhooe.at.nuntium.networking
 
-import nuntium.fhooe.at.nuntium.addparticipant.Entity.Participant
+import nuntium.fhooe.at.nuntium.room.participant.Participant
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.Headers

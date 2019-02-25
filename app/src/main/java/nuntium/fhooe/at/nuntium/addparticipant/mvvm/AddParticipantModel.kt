@@ -1,8 +1,8 @@
 package nuntium.fhooe.at.nuntium.addparticipant.mvvm
 
 import android.util.Log
-import nuntium.fhooe.at.nuntium.Utils.isValidEmail
-import nuntium.fhooe.at.nuntium.addparticipant.Entity.Participant
+import nuntium.fhooe.at.nuntium.utils.isValidEmail
+import nuntium.fhooe.at.nuntium.room.participant.Participant
 import nuntium.fhooe.at.nuntium.networking.ParticipantServiceFactory
 import retrofit2.Call
 import retrofit2.Callback
