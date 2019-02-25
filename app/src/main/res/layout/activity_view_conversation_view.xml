@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:theme="?attr/actionBarTheme"
+            android:minHeight="?attr/actionBarSize" android:id="@+id/view_conversation_toolbar"/>
+    <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scrollbars="vertical" android:id="@+id/view_conversation_rcview"/>
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:inputType="text|textMultiLine|textCapSentences"
+                android:hint="Enter text"
+                android:background="@android:color/transparent"
+                android:maxLines="5"
+                android:maxLength="255"
+                android:id="@+id/view_conversation_textfield" android:layout_weight="1"
+                android:layout_marginLeft="10dp"/>
+        <Button
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:id="@+id/view_conversation_bt_send"
+                android:padding="15dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/view_conversation_sendbt_background"
+                android:drawableStart="@drawable/view_conversation_icon_send"/>
+    </LinearLayout>
+</LinearLayout>

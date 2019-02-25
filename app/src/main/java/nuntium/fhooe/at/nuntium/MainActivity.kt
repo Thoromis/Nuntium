@@ -9,6 +9,7 @@ import android.view.MenuItem
 
 import kotlinx.android.synthetic.main.activity_main.*
 import nuntium.fhooe.at.nuntium.addparticipant.mvvm.AddParticipantView
+import nuntium.fhooe.at.nuntium.viewconversation.mvvm.ViewConversationView
 
 class MainActivity : AppCompatActivity() {
 
