@@ -1,27 +1,47 @@
-package nuntium.fhooe.at.nuntium
+package nuntium.fhooe.at.nuntium.conversationoverview.mvvm
 
 import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProvider
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_main.*
+import nuntium.fhooe.at.nuntium.R
 import nuntium.fhooe.at.nuntium.addparticipant.mvvm.AddParticipantView
+import nuntium.fhooe.at.nuntium.conversationoverview.ConversationsAdapter
 import nuntium.fhooe.at.nuntium.room.conversation.Conversation
 import nuntium.fhooe.at.nuntium.room.message.Message
 import nuntium.fhooe.at.nuntium.room.participant.Participant
 import nuntium.fhooe.at.nuntium.viewconversation.mvvm.ViewConversationRepository
 import java.util.*
+import kotlin.collections.ArrayList
 
-class MainActivity : AppCompatActivity() {
+class ConversationOverviewView : AppCompatActivity(),
+    ConversationOverviewMVVM.View {
+    private lateinit var viewModel: ConversationOverviewMVVM.ViewModel
+    lateinit var  conversationsAdapter: ConversationsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+
+        viewModel = ConversationOverviewViewModel(this, this.applicationContext)
+
+        // Recyclerview stuff
+        val conversationsView = findViewById<RecyclerView>(R.id.conversation_recycler_view)
+        conversationsView.layoutManager = LinearLayoutManager(this)
+        conversationsView.setHasFixedSize(true)
+        conversationsAdapter = ConversationsAdapter()
+        conversationsView.adapter = conversationsAdapter
+        viewModel.loadAllConversations()
+
 
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
@@ -31,6 +51,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         //repoTest()
+    }
+
+    override fun setConversationsInRecyclerView(conversations: List<Conversation>){
+        conversationsAdapter.conversationList = conversations as ArrayList<Conversation>
     }
 
     private fun repoTest() {
