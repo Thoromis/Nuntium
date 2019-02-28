@@ -1,6 +1,7 @@
 package nuntium.fhooe.at.nuntium.addparticipant.mvvm
 
 import android.animation.ObjectAnimator
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +11,9 @@ import android.widget.EditText
 import android.widget.ProgressBar
 import kotlinx.android.synthetic.main.activity_main.*
 import nuntium.fhooe.at.nuntium.R
+import nuntium.fhooe.at.nuntium.conversationoverview.mvvm.ConversationOverviewView
+import nuntium.fhooe.at.nuntium.room.participant.Participant
+import nuntium.fhooe.at.nuntium.utils.NuntiumPreferences
 import nuntium.fhooe.at.nuntium.utils.shakeErrorView
 
 class AddParticipantView : AppCompatActivity(), AddParticipantMVVM.View {
@@ -43,10 +47,10 @@ class AddParticipantView : AppCompatActivity(), AddParticipantMVVM.View {
         //Set up animation for progress circle
         progressWheel?.let {
             spinAnimation = ObjectAnimator.ofInt(it, "progress", 0, 100).apply {
-                    duration = 400
-                    repeatCount = ObjectAnimator.INFINITE
-                    repeatMode = ObjectAnimator.RESTART
-                }
+                duration = 400
+                repeatCount = ObjectAnimator.INFINITE
+                repeatMode = ObjectAnimator.RESTART
+            }
         }
     }
 
@@ -80,5 +84,15 @@ class AddParticipantView : AppCompatActivity(), AddParticipantMVVM.View {
 
     override fun shakeEmail() {
         etEmail?.shakeErrorView()
+    }
+
+    override fun saveParticipant(newParticipant: Participant) =
+        NuntiumPreferences.insertParticipant(applicationContext, newParticipant)
+
+    override fun onBackPressed() {
+        val intent = Intent(applicationContext, ConversationOverviewView::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        intent.putExtra("EXIT", true)
+        startActivity(intent)
     }
 }

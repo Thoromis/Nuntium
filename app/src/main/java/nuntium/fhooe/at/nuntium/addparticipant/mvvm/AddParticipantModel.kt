@@ -4,6 +4,7 @@ import android.util.Log
 import nuntium.fhooe.at.nuntium.utils.isValidEmail
 import nuntium.fhooe.at.nuntium.room.participant.Participant
 import nuntium.fhooe.at.nuntium.networking.ParticipantServiceFactory
+import nuntium.fhooe.at.nuntium.networking.entity.NetworkParticipant
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -13,7 +14,7 @@ class AddParticipantModel(val viewModel: AddParticipantMVVM.ViewModel) : AddPart
 
     override fun submitClicked(firstname: String?, lastname: String?, email: String?) {
         val invalidViews = mutableListOf<AddParticipantMVVM.Views>()
-        val newParticipant = Participant()
+        val newParticipant = NetworkParticipant()
 
         if (firstname == null) invalidViews.add(AddParticipantMVVM.Views.FIRSTNAME) else newParticipant.firstName = firstname
         if (lastname == null) invalidViews.add(AddParticipantMVVM.Views.LASTNAME) else newParticipant.lastName = lastname
@@ -32,7 +33,7 @@ class AddParticipantModel(val viewModel: AddParticipantMVVM.ViewModel) : AddPart
         }
     }
 
-    private fun postParticipant(newParticipant: Participant) =
+    private fun postParticipant(newParticipant: NetworkParticipant) =
         participantService.createParticipant(newParticipant).enqueue(object : Callback<Participant> {
             override fun onFailure(call: Call<Participant>, t: Throwable) {
                 with(viewModel) {
@@ -47,6 +48,7 @@ class AddParticipantModel(val viewModel: AddParticipantMVVM.ViewModel) : AddPart
                 with(viewModel) {
                     displaySuccessMessage()
                     stopProgressWheel()
+                    response.body()?.let { saveParticipant(it) }
                     startConversationActivity()
                 }
             }

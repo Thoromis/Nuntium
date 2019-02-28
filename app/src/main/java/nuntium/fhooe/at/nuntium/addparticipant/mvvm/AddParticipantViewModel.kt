@@ -2,6 +2,7 @@ package nuntium.fhooe.at.nuntium.addparticipant.mvvm
 
 import android.content.Context
 import nuntium.fhooe.at.nuntium.R
+import nuntium.fhooe.at.nuntium.room.participant.Participant
 
 class AddParticipantViewModel(val view: AddParticipantMVVM.View, val context: Context) :
     AddParticipantMVVM.ViewModel {
@@ -35,6 +36,8 @@ class AddParticipantViewModel(val view: AddParticipantMVVM.View, val context: Co
 
     override fun displaySuccessMessage() =
         view.displayMessage(context.getString(R.string.create_participant_success_message))
+
+    override fun saveParticipant(newParticipant: Participant) = view.saveParticipant(newParticipant)
 
     override fun shakeViews(views: List<AddParticipantMVVM.Views>) = views.forEach {
         when (it) {

@@ -2,6 +2,7 @@ package nuntium.fhooe.at.nuntium.room.participant
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
+import nuntium.fhooe.at.nuntium.networking.entity.NetworkParticipant
 import java.io.Serializable
 
 @Entity
@@ -13,4 +14,8 @@ data class Participant(
     var avatar: String
 ) : Serializable {
     constructor() : this(0, "", "", "", "")
+}
+
+fun Participant.toNetworkParticipant() : NetworkParticipant {
+    return NetworkParticipant(firstName, lastName, email, avatar)
 }

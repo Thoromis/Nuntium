@@ -10,13 +10,16 @@ import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 import nuntium.fhooe.at.nuntium.R
+import nuntium.fhooe.at.nuntium.addparticipant.mvvm.AddParticipantView
 import nuntium.fhooe.at.nuntium.conversationoverview.ConversationsAdapter
 import nuntium.fhooe.at.nuntium.newconversation.mvvm.NewConversationView
 import nuntium.fhooe.at.nuntium.room.conversation.Conversation
 import nuntium.fhooe.at.nuntium.room.message.Message
 import nuntium.fhooe.at.nuntium.room.participant.Participant
+import nuntium.fhooe.at.nuntium.utils.NuntiumPreferences
 import nuntium.fhooe.at.nuntium.viewconversation.mvvm.ViewConversationRepository
 import java.util.*
 
@@ -30,6 +33,12 @@ class ConversationOverviewView : AppCompatActivity(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+
+        when {
+            intent.getBooleanExtra("EXIT", false) -> finish()
+            NuntiumPreferences.getParticipantId(applicationContext) == -1 -> startAddParticipant()
+            else -> Toast.makeText(this, "You are logged in as ${NuntiumPreferences.getParticipantName(applicationContext)}...", Toast.LENGTH_LONG).show()
+        }
 
         viewModel = ConversationOverviewViewModel(this, this.applicationContext)
 
@@ -109,6 +118,11 @@ class ConversationOverviewView : AppCompatActivity(),
         //}
             //.subscribeOn(Schedulers.computation())
             //.subscribe()
+    }
+
+    private fun startAddParticipant() {
+        val intent = Intent(this, AddParticipantView::class.java)
+        startActivity(intent)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

@@ -1,5 +1,7 @@
 package nuntium.fhooe.at.nuntium.addparticipant.mvvm
 
+import nuntium.fhooe.at.nuntium.room.participant.Participant
+
 interface AddParticipantMVVM {
     interface View {
         fun displayMessage(message: String)
@@ -9,6 +11,7 @@ interface AddParticipantMVVM {
         fun startProgressWheel()
         fun stopProgressWheel()
         fun startConversationActivity()
+        fun saveParticipant(newParticipant: Participant)
     }
 
     interface Model {
@@ -25,6 +28,7 @@ interface AddParticipantMVVM {
         fun stopProgressWheel()
         fun shakeViews(views: List<Views>)
         fun startConversationActivity()
+        fun saveParticipant(newParticipant: Participant)
     }
 
     enum class Views {

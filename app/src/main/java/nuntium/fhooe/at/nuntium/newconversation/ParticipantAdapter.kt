@@ -32,6 +32,7 @@ class ParticipantAdapter(
             participant_item_tv_email.text = participant.email
             Glide.with(context)
                 .load(participant.avatar)
+                .placeholder(ContextCompat.getDrawable(context, R.color.lightGray))
                 .into(participant_item_iv_avatar)
         }
 
@@ -45,11 +46,12 @@ class ParticipantAdapter(
             oldElement?.let {
                 val oldIndex = participants.indexOf(it)
                 participants[oldIndex] = participants[oldIndex].first to false
+                this.notifyItemChanged(oldIndex)
             }
             participants[position] = participants[position].first to true
 
             activateButton()
-            this.notifyDataSetChanged()
+            this.notifyItemChanged(position)
         }
     }
 

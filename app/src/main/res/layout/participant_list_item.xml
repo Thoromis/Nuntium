@@ -5,20 +5,21 @@
                                     android:orientation="horizontal"
                                     android:layout_width="match_parent"
                                     android:layout_height="70dp" app:cardCornerRadius="5dp"
-                                    app:cardPreventCornerOverlap="false">
+                                    app:cardPreventCornerOverlap="false" android:layout_marginBottom="3dp"
+>
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal" android:weightSum="10">
         <ImageView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 tools:srcCompat="@tools:sample/avatars"
                 android:id="@+id/participant_item_iv_avatar"
                 android:layout_weight="2"/>
         <LinearLayout
                 android:orientation="vertical"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="match_parent" android:layout_weight="8" android:weightSum="10">
             <TextView
                     android:text="Xaver Franz"

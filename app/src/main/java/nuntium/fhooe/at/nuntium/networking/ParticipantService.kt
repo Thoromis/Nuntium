@@ -1,5 +1,6 @@
 package nuntium.fhooe.at.nuntium.networking
 
+import nuntium.fhooe.at.nuntium.networking.entity.NetworkParticipant
 import nuntium.fhooe.at.nuntium.room.participant.Participant
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -9,7 +10,7 @@ interface ParticipantService {
 
     @Headers("content-type: application/json")
     @POST("api/participants")
-    fun createParticipant(@Body participant: Participant): Call<Participant>
+    fun createParticipant(@Body participant: NetworkParticipant): Call<Participant>
 
     @Headers("content-type: application/json")
     @GET("api/participants")

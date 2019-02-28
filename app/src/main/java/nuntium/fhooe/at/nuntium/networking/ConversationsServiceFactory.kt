@@ -6,7 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 object ConversationsServiceFactory {
     fun build(): ConversationsService {
         return Retrofit.Builder()
-            .baseUrl("http://192.168.8.157:8080/")
+            .baseUrl("http://10.0.0.22:8080/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(ConversationsService::class.java)
