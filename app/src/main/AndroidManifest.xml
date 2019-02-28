@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools" package="nuntium.fhooe.at.nuntium">
+          xmlns:tools="http://schemas.android.com/tools"
+          package="nuntium.fhooe.at.nuntium">
+
     <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
             android:name=".modules.App"
             android:allowBackup="true"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
-            android:usesCleartextTraffic="true"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
-            android:theme="@style/AppTheme.NoActionBar" tools:ignore="GoogleAppIndexingWarning">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:usesCleartextTraffic="true"
+            tools:ignore="GoogleAppIndexingWarning">
         <activity
                 android:name=".MainActivity"
                 android:label="@string/app_name"
@@ -26,9 +30,12 @@
                 android:label="@string/title_activity_add_participant_view"
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name=".viewconversation.mvvm.ViewConversationView"
-                  android:windowSoftInputMode="adjustResize"
-                  android:label="ViewConversationView"/>
+        <activity
+                android:name=".viewconversation.mvvm.ViewConversationView"
+                android:label="ViewConversationView"
+                android:windowSoftInputMode="adjustResize"/>
+        <activity android:name=".newconversation.mvvm.NewConversationView">
+        </activity>
     </application>
 
 </manifest>

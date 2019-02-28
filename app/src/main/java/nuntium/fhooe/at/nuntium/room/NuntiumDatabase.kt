@@ -11,7 +11,7 @@ import nuntium.fhooe.at.nuntium.room.participant.Participant
 import nuntium.fhooe.at.nuntium.room.participant.ParticipantDaoAccess
 import nuntium.fhooe.at.nuntium.utils.DateConverter
 
-@Database(entities = [Message::class, Participant::class, Conversation::class], version = 1, exportSchema = false)
+@Database(entities = [Message::class, Participant::class, Conversation::class], version = 2, exportSchema = false)
 @TypeConverters(DateConverter::class)
 abstract class NuntiumDatabase : RoomDatabase() {
     abstract fun participantDaoAccess(): ParticipantDaoAccess

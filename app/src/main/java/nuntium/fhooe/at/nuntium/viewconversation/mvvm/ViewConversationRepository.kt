@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.util.Log
 import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import nuntium.fhooe.at.nuntium.room.DatabaseCreator
@@ -57,7 +58,7 @@ class ViewConversationRepository : ViewConversationMVVM.Repository {
                 result =
                     DatabaseCreator.database.messageDaoAccess().getMessagesByConversationId(conversationId)
             }
-                .subscribeOn(Schedulers.computation())
+                .subscribeOn(Schedulers.io())
                 .subscribe({
                     Log.i("LOG_TAG", "Message reading completed successfully!")
                 }, {

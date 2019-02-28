@@ -9,7 +9,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_main.*
-import nuntium.fhooe.at.nuntium.addparticipant.mvvm.AddParticipantView
+import nuntium.fhooe.at.nuntium.newconversation.mvvm.NewConversationView
 import nuntium.fhooe.at.nuntium.room.conversation.Conversation
 import nuntium.fhooe.at.nuntium.room.message.Message
 import nuntium.fhooe.at.nuntium.room.participant.Participant
@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
-            val intent = Intent(this, AddParticipantView::class.java)
+            val intent = Intent(this, NewConversationView::class.java)
             startActivity(intent)
         }
 
@@ -37,8 +37,8 @@ class MainActivity : AppCompatActivity() {
         val repo = ViewConversationRepository()
 
         //two participants
-        val part1 = Participant(1, "Franz", "Xaver", "mail@from.xaver")
-        val part2 = Participant(2, "Josef", "Huber", "huber@mail.what")
+        val part1 = Participant(1, "Franz", "Xaver", "mail@from.xaver", "")
+        val part2 = Participant(2, "Josef", "Huber", "huber@mail.what", "")
 
         //a conversation
         val conversation = Conversation(1, "Topicic", Date())
@@ -81,7 +81,7 @@ class MainActivity : AppCompatActivity() {
         //        messageListRepo.forEach { message ->
         //            repo.insertMessage(message)
         //        }
-        //        Log.i("LOG_TAG", "Insertion of objects is finished...")
+        //        Constants.i("LOG_TAG", "Insertion of objects is finished...")
         //    }
         //}
             //.subscribeOn(Schedulers.computation())

@@ -6,8 +6,11 @@ import retrofit2.http.DELETE
 
 @Dao
 interface ParticipantDaoAccess {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertParticipant(participant: Participant)
+
+    @Query("SELECT * FROM Participant")
+    fun getAllParticipants(): LiveData<List<Participant>>
 
     @Query("SELECT * FROM Participant WHERE id= :participantId")
     fun getParticipantById(participantId: Int): LiveData<Participant>
