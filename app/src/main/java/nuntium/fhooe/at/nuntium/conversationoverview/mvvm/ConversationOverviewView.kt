@@ -1,10 +1,17 @@
 package nuntium.fhooe.at.nuntium.conversationoverview.mvvm
 
+import android.arch.lifecycle.Observer
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
+import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import kotlinx.android.synthetic.main.activity_main.*
+import nuntium.fhooe.at.nuntium.R
 import nuntium.fhooe.at.nuntium.conversationoverview.ConversationsAdapter
 import nuntium.fhooe.at.nuntium.newconversation.mvvm.NewConversationView
 import nuntium.fhooe.at.nuntium.room.conversation.Conversation
@@ -12,6 +19,7 @@ import nuntium.fhooe.at.nuntium.room.message.Message
 import nuntium.fhooe.at.nuntium.room.participant.Participant
 import nuntium.fhooe.at.nuntium.viewconversation.mvvm.ViewConversationRepository
 import java.util.*
+
 
 class ConversationOverviewView : AppCompatActivity(),
     ConversationOverviewMVVM.View {
