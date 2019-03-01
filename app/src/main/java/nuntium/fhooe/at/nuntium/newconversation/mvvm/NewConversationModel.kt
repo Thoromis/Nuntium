@@ -10,7 +10,7 @@ import nuntium.fhooe.at.nuntium.utils.Constants.LOG_TAG
 class NewConversationModel(private val viewModel: NewConversationMVVM.ViewModel) : NewConversationMVVM.Model {
     private val repository: NewConversationMVVM.Repository
     private var disposable = Disposables.disposed()
-    private var networkParticipants = listOf<Participant>()
+    private var networkParticipants = mutableListOf<Participant>()
 
     init {
         repository = NewConversationRepository()
@@ -25,28 +25,40 @@ class NewConversationModel(private val viewModel: NewConversationMVVM.ViewModel)
 
     override fun startUpFinished() {
         viewModel.deactivateButton()
-        repository.fetchAllParticipantsFromNetwork {
-            participantNetworkFetchingFinished(it)
+        repository.fetchAllParticipantsFromNetwork { participants, nextPage ->
+            participantNetworkFetchingFinished(participants, nextPage)
         }
     }
 
     override fun recyclerViewDataChanged(participants: List<Participant>) {
-        val toDelete = participants.filter { !networkParticipants.contains(it) }
-        repository.deleteParticipantsFromDatabase(toDelete)
-        viewModel.updateRecyclerView(participants.filter { networkParticipants.contains(it) })
+        when {
+            !networkParticipants.isEmpty() -> {
+                val toDelete = participants.filter { !networkParticipants.contains(it) }
+                repository.deleteParticipantsFromDatabase(toDelete)
+                viewModel.updateRecyclerView(participants.filter { networkParticipants.contains(it) })
+            }
+            networkParticipants.isEmpty() -> viewModel.updateRecyclerView(participants)
+        }
+
     }
 
-    private fun participantNetworkFetchingFinished(participants: List<Participant>) {
+    private fun participantNetworkFetchingFinished(participants: List<Participant>, nextPage: Int) {
         //filter logged in user
         when {
             !participants.isEmpty() -> {
-                repository.updateParticipantsInDatabase(participants)
-                networkParticipants = participants
+                repository.updateParticipantsInDatabase(participants.filter { it.id != viewModel.getCurrentParticipant() })
+                networkParticipants.addAll(participants)
             }
             else -> {
                 //Tell user data is local via Viewmodel
                 Log.i(LOG_TAG, "Working locally, internet connection seems to not work out...")
+                viewModel.displayNoNetwork()
             }
+        }
+
+        //Fetch participants from next page if needed
+        if (nextPage != -1) repository.fetchParticipantsFromPage(nextPage) { parts, page ->
+            participantNetworkFetchingFinished(parts, page)
         }
 
         repository.fetchAllParticipantsFromDatabase {

@@ -5,6 +5,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import nuntium.fhooe.at.nuntium.room.participant.Participant
+import retrofit2.Call
 
 interface NewConversationMVVM {
     interface View {
@@ -16,10 +17,12 @@ interface NewConversationMVVM {
         fun activateButton()
         fun deactivateButton()
         fun updateRecyclerView(participants: List<Participant>)
+        fun getCurrentParticipant(): Int
     }
 
     interface ViewModel {
         var livedata: LiveData<List<Participant>>?
+
         fun initializeRecyclerView(participants: LiveData<List<Participant>>)
         fun submitClicked(selected: Participant?)
         fun startUpFinished()
@@ -31,6 +34,7 @@ interface NewConversationMVVM {
         fun deactivateButton()
         fun recyclerViewDataChanged(participants: List<Participant>)
         fun updateRecyclerView(participants: List<Participant>)
+        fun getCurrentParticipant(): Int
     }
 
     interface Model {
@@ -42,8 +46,9 @@ interface NewConversationMVVM {
 
     interface Repository {
         fun updateParticipantsInDatabase(participants: List<Participant>)
-        fun fetchAllParticipantsFromNetwork(fetchingFinished: (List<Participant>) -> Unit)
         fun fetchAllParticipantsFromDatabase(fetchingFinished: (LiveData<List<Participant>>) -> Unit)
         fun deleteParticipantsFromDatabase(participants: List<Participant>)
+        fun fetchAllParticipantsFromNetwork(fetchingFinished: (List<Participant>, Int) -> Unit)
+        fun fetchParticipantsFromPage(nextPage: Int, fetchingFinished: (List<Participant>, Int) -> Unit)
     }
 }

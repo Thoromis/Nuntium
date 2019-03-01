@@ -16,6 +16,7 @@ import nuntium.fhooe.at.nuntium.R
 import nuntium.fhooe.at.nuntium.newconversation.ParticipantAdapter
 import nuntium.fhooe.at.nuntium.room.participant.Participant
 import nuntium.fhooe.at.nuntium.utils.Constants.LOG_TAG
+import nuntium.fhooe.at.nuntium.utils.NuntiumPreferences
 import nuntium.fhooe.at.nuntium.viewconversation.mvvm.ViewConversationView
 
 class NewConversationView : NewConversationMVVM.View, AppCompatActivity() {
@@ -32,6 +33,10 @@ class NewConversationView : NewConversationMVVM.View, AppCompatActivity() {
         initializeMvvm()
         initializeViews()
         viewModel?.startUpFinished()
+    }
+
+    override fun getCurrentParticipant() : Int {
+        return NuntiumPreferences.getParticipantId(this)
     }
 
     private fun initializeMvvm() {

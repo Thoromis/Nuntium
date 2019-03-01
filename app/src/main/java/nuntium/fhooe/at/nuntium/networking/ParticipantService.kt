@@ -17,8 +17,8 @@ interface ParticipantService {
     fun getAllParticipants(): Call<List<Participant>>
 
     @Headers("content-type: application/json")
-    @GET("api/participants?page={page}&size={size}")
-    fun getParticipantsOnPage(@Path("page") page: Int, @Path("size") size: Int): Call<Participant>
+    @GET("api/participants")
+    fun getParticipantsOnPage(@Query("page") page: Int, @Query("size") size: Int): Call<List<Participant>>
 
     @Headers("content-type: application/json")
     @GET("api/participants/{id}")

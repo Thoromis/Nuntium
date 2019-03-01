@@ -25,6 +25,8 @@ class NewConversationViewModel(private val view: NewConversationMVVM.View) : New
         view.startParticipantObservation()
     }
 
+    override fun getCurrentParticipant(): Int = view.getCurrentParticipant()
+
     override fun startConversationWithParticipant(other: Participant) = view.startConversationWithParticipant(other)
 
     override fun startUpFinished() = model.startUpFinished()

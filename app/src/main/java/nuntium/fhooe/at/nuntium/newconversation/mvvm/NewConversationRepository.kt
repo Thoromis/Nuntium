@@ -23,18 +23,39 @@ class NewConversationRepository : NewConversationMVVM.Repository {
     private val participantService = ParticipantServiceFactory.build()
     private val disposables: CompositeDisposable = CompositeDisposable()
 
-    override fun fetchAllParticipantsFromNetwork(fetchingFinished: (List<Participant>) -> (Unit)) {
+    override fun fetchAllParticipantsFromNetwork(fetchingFinished: (List<Participant>, Int) -> Unit) {
         participantService.getAllParticipants().enqueue(object : Callback<List<Participant>> {
             override fun onFailure(call: Call<List<Participant>>, t: Throwable) {
                 Log.i(LOG_TAG, "Error while fetching participants from the server...")
                 t.printStackTrace()
-                fetchingFinished(listOf())
+                fetchingFinished(listOf(), -1)
             }
 
             override fun onResponse(call: Call<List<Participant>>, response: Response<List<Participant>>) {
                 Log.i(LOG_TAG, "Fetching participants from the server done successfully")
                 response.body()?.let {
-                    fetchingFinished(it)
+                    val nextPage = if (it.count() < 20) -1 else 1
+                    fetchingFinished(it, nextPage)
+                }
+            }
+        })
+    }
+
+    override fun fetchParticipantsFromPage(nextPage: Int, fetchingFinished: (List<Participant>, Int) -> Unit) {
+        Log.i(LOG_TAG, "Fetching participants from page $nextPage")
+
+        participantService.getParticipantsOnPage(1, 20).enqueue(object : Callback<List<Participant>> {
+            override fun onFailure(call: Call<List<Participant>>, t: Throwable) {
+                Log.i(LOG_TAG, "Error while fetching participants from page $nextPage...")
+                t.printStackTrace()
+                fetchingFinished(listOf(), -1)
+            }
+
+            override fun onResponse(call: Call<List<Participant>>, response: Response<List<Participant>>) {
+                Log.i(LOG_TAG, "Fetching participants from page $nextPage successfully")
+                response.body()?.let {
+                    val calcNextPage = if (it.count() < 20) -1 else nextPage + 1
+                    fetchingFinished(it, calcNextPage)
                 }
             }
         })

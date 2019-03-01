@@ -32,7 +32,7 @@ class ParticipantAdapter(
             participant_item_tv_email.text = participant.email
             Glide.with(context)
                 .load(participant.avatar)
-                .placeholder(ContextCompat.getDrawable(context, R.color.lightGray))
+                .placeholder(ContextCompat.getDrawable(context, R.color.white))
                 .into(participant_item_iv_avatar)
         }
 
