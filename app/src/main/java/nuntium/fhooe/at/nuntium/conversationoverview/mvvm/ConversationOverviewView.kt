@@ -78,16 +78,16 @@ class ConversationOverviewView : AppCompatActivity(),
 
         //some messages
         val messageList = listOf(
-            Message(5, "Hallo Xaver", 1, 2, 1, 30, Date()),
-            Message(2, "Hallo Franz!", 1, 1, 2, 31, Date()),
-            Message(3, "Wie geht es dir?", 1, 2, 1, 32, Date()),
-            Message(4, "Ganz gut. Lass mich in Ruhe!", 1, 1, 2, 33, Date())
+            Message( "Hallo Xaver", 1, 2, 1, 30, Date()),
+            Message( "Hallo Franz!", 1, 1, 2, 31, Date()),
+            Message( "Wie geht es dir?", 1, 2, 1, 32, Date()),
+            Message( "Ganz gut. Lass mich in Ruhe!", 1, 1, 2, 33, Date())
         )
         val messageListRepo = listOf(
-            Message(6, "Hallo Xaver", 1, 2, 1, 34, Date()),
-            Message(7, "Hallo Franz!", 1, 1, 2, 35, Date()),
-            Message(8, "Wie geht es dir?", 1, 2, 1, 36, Date()),
-            Message(9, "Ganz gut. Lass mich in Ruhe!", 1, 1, 2, 37, Date())
+            Message( "Hallo Xaver", 1, 2, 1, 34, Date()),
+            Message( "Hallo Franz!", 1, 1, 2, 35, Date()),
+            Message( "Wie geht es dir?", 1, 2, 1, 36, Date()),
+            Message( "Ganz gut. Lass mich in Ruhe!", 1, 1, 2, 37, Date())
         )
 
         //Insertion

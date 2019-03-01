@@ -28,11 +28,10 @@ import java.util.*
     ]
 )
 data class Message(
-    @PrimaryKey(autoGenerate = true) var localId: Int,
     var content: String,
     var conversationId: Int,
     var receiverId: Int,
     var senderId: Int,
-    var id: Int,
+    @PrimaryKey(autoGenerate = false) var id: Int,
     var creationDate: Date
 )

@@ -14,9 +14,6 @@ interface MessageDaoAccess {
     @Query("SELECT * FROM Message")
     fun getAllMessages(): LiveData<List<Message>>
 
-    @Query("SELECT * FROM Message WHERE localId= :messageId")
-    fun getMessageById(messageId: Int): LiveData<Message>
-
     @Query("SELECT * FROM Message WHERE conversationId= :conversationId")
     fun getMessagesByConversationId(conversationId: Int): LiveData<List<Message>>
 
