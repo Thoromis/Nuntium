@@ -13,6 +13,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 import nuntium.fhooe.at.nuntium.R
+import nuntium.fhooe.at.nuntium.conversationoverview.ConversationItem
 import nuntium.fhooe.at.nuntium.addparticipant.mvvm.AddParticipantView
 import nuntium.fhooe.at.nuntium.conversationoverview.ConversationsAdapter
 import nuntium.fhooe.at.nuntium.newconversation.mvvm.NewConversationView
@@ -61,8 +62,8 @@ class ConversationOverviewView : AppCompatActivity(),
         //repoTest()
     }
 
-    override fun setConversationsInRecyclerView(conversations: List<Conversation>){
-        conversationsAdapter.conversationList = conversations as ArrayList<Conversation>
+    override fun setConversationsInRecyclerView(conversations: ArrayList<ConversationItem>){
+        conversationsAdapter.conversationList = conversations
     }
 
     private fun repoTest() {

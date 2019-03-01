@@ -1,18 +1,18 @@
 package nuntium.fhooe.at.nuntium.conversationoverview.mvvm
 
-import nuntium.fhooe.at.nuntium.room.conversation.Conversation
+import nuntium.fhooe.at.nuntium.conversationoverview.ConversationItem
 
 interface ConversationOverviewMVVM {
     interface View {
-        fun setConversationsInRecyclerView(conversations: List<Conversation>)
+        fun setConversationsInRecyclerView(conversations: ArrayList<ConversationItem>)
     }
 
     interface Model {
-        fun loadAllConversations()
+        fun loadAllConversationsForUser(userId: Int)
     }
 
     interface ViewModel {
         fun loadAllConversations()
-        fun setConversationsOnView(conversations: List<Conversation>)
+        fun setConversationsOnView(conversations: ArrayList<ConversationItem>)
     }
 }
