@@ -11,6 +11,6 @@
             android:layout_marginRight="48dp"
             android:padding="8dp"
             android:layout_margin="8dp"
-            android:background="#4167f4"
-            android:typeface="monospace"/>
+            android:typeface="monospace" android:textColor="@android:color/black"
+            android:background="@drawable/message_background_other"/>
 </FrameLayout>

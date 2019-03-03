@@ -13,8 +13,8 @@ import android.view.MenuItem
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 import nuntium.fhooe.at.nuntium.R
-import nuntium.fhooe.at.nuntium.conversationoverview.ConversationItem
 import nuntium.fhooe.at.nuntium.addparticipant.mvvm.AddParticipantView
+import nuntium.fhooe.at.nuntium.conversationoverview.ConversationItem
 import nuntium.fhooe.at.nuntium.conversationoverview.ConversationsAdapter
 import nuntium.fhooe.at.nuntium.newconversation.mvvm.NewConversationView
 import nuntium.fhooe.at.nuntium.room.conversation.Conversation
@@ -67,6 +67,7 @@ class ConversationOverviewView : AppCompatActivity(),
     }
 
     private fun repoTest() {
+        /*
         val repo = ViewConversationRepository()
 
         //two participants
@@ -91,7 +92,8 @@ class ConversationOverviewView : AppCompatActivity(),
         )
 
         //Insertion
-        repo.loadMessagesForConversation(1).observe(this, object : Observer<List<Message>> {
+
+        repo.fetchAllMessagesFromDatabase(1).observe(this, object : Observer<List<Message>> {
             override fun onChanged(messages: List<Message>?) {
                 messages?.forEach { message ->
                     Log.i("MESSAGE", message.content)
@@ -100,9 +102,9 @@ class ConversationOverviewView : AppCompatActivity(),
             }
         })
         messageListRepo.forEach { message ->
-            repo.insertMessage(message)
+            repo.insertMessageToDatabase(message)
         }
-
+        */
         //Completable.fromAction {
         //    with(DatabaseCreator.database) {
         //        participantDaoAccess().insertParticipant(part1)
@@ -112,7 +114,7 @@ class ConversationOverviewView : AppCompatActivity(),
 //
         //        messageDaoAccess().insertMessages(messageList)
         //        messageListRepo.forEach { message ->
-        //            repo.insertMessage(message)
+        //            repo.insertMessageToDatabase(message)
         //        }
         //        Constants.i("LOG_TAG", "Insertion of objects is finished...")
         //    }

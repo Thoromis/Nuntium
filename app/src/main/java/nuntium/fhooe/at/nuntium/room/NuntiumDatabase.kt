@@ -16,7 +16,6 @@ import nuntium.fhooe.at.nuntium.utils.DateConverter
 abstract class NuntiumDatabase : RoomDatabase() {
     abstract fun participantDaoAccess(): ParticipantDaoAccess
     abstract fun messageDaoAccess(): MessageDaoAccess
-
     abstract fun conversationDaoAccess(): ConversationDaoAccess
 
     companion object {

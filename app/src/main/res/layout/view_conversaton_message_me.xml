@@ -9,9 +9,9 @@
               android:layout_marginLeft="48dp"
               android:layout_gravity="right"
               android:text="TextView" android:id="@+id/view_conversation_message"
-              android:typeface="monospace"
               android:padding="8dp"
               android:layout_margin="8dp"
-              android:background="@color/colorPrimary"/>
+              android:typeface="monospace" android:textColor="@android:color/black"
+              android:background="@drawable/message_background_me"/>
 
 </FrameLayout>

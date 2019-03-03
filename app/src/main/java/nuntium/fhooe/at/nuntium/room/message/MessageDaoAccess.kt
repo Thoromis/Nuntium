@@ -5,7 +5,7 @@ import android.arch.persistence.room.*
 
 @Dao
 interface MessageDaoAccess {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertMessage(message: Message)
 
     @Insert
