@@ -1,5 +1,6 @@
 package nuntium.fhooe.at.nuntium.viewconversation.mvvm
 
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
@@ -62,8 +63,8 @@ class ViewConversationView : AppCompatActivity(),ViewConversationMVVM.View {
         btnSend = findViewById(R.id.view_conversation_btn_send)
         toolbar = findViewById(R.id.view_conversation_toolbar)
         text = findViewById(R.id.view_conversation_textfield)
-        toolbar.title = topic
-        toolbar.subtitle = name
+        view_conversation_toolbar_title.text = topic
+        view_conversation_toolbar_participant.text = name
 
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

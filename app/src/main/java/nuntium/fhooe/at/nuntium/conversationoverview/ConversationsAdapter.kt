@@ -1,6 +1,7 @@
 package nuntium.fhooe.at.nuntium.conversationoverview
 
 import android.content.Context
+import android.content.Intent
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -10,9 +11,10 @@ import android.widget.TextView
 import com.bumptech.glide.Glide
 import nuntium.fhooe.at.nuntium.R
 import nuntium.fhooe.at.nuntium.room.conversation.Conversation
+import nuntium.fhooe.at.nuntium.viewconversation.mvvm.ViewConversationView
 import org.w3c.dom.Text
 
-class ConversationsAdapter : RecyclerView.Adapter<ConversationsAdapter.ConversationsHolder>() {
+class ConversationsAdapter(val startConversation: (data: ConversationItem) -> Unit) : RecyclerView.Adapter<ConversationsAdapter.ConversationsHolder>() {
     var conversationList = ArrayList<ConversationItem>()
     set(value) {
         field = value
@@ -39,6 +41,9 @@ class ConversationsAdapter : RecyclerView.Adapter<ConversationsAdapter.Conversat
             .load(currentConversationItem.conversationPartner.avatar)
             .into(holder.imageViewConversationAvatar)
 
+        holder.itemView.setOnClickListener {
+            startConversation(conversationList[position])
+        }
     }
 
 

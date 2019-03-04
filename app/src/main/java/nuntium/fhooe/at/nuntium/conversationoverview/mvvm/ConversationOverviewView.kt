@@ -22,6 +22,7 @@ import nuntium.fhooe.at.nuntium.room.message.Message
 import nuntium.fhooe.at.nuntium.room.participant.Participant
 import nuntium.fhooe.at.nuntium.utils.NuntiumPreferences
 import nuntium.fhooe.at.nuntium.viewconversation.mvvm.ViewConversationRepository
+import nuntium.fhooe.at.nuntium.viewconversation.mvvm.ViewConversationView
 import java.util.*
 
 
@@ -47,7 +48,14 @@ class ConversationOverviewView : AppCompatActivity(),
         val conversationsView = findViewById<RecyclerView>(R.id.conversation_recycler_view)
         conversationsView.layoutManager = LinearLayoutManager(this)
         conversationsView.setHasFixedSize(true)
-        conversationsAdapter = ConversationsAdapter()
+
+        conversationsAdapter = ConversationsAdapter{
+            val intent = Intent(applicationContext, ViewConversationView::class.java)
+            intent.putExtra("receiver",it.conversationPartner)
+            intent.putExtra("conversation",it.conversation)
+            startActivity(intent)
+        }
+
         conversationsView.adapter = conversationsAdapter
         viewModel.loadAllConversations()
 
