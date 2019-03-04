@@ -1,16 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:layout_marginRight="50dp">
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="wrap_content"
+                                             android:layout_marginRight="50dp"
+>
 
     <TextView
             android:text="TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:id="@+id/view_conversation_message"
-            android:layout_marginRight="48dp"
             android:padding="8dp"
             android:layout_margin="8dp"
+            android:maxWidth="325dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             android:typeface="monospace" android:textColor="@android:color/black"
             android:background="@drawable/message_background_other"/>
-</FrameLayout>
+    <TextView
+            android:text="04:20"
+            android:layout_width="wrap_content"
+            android:layout_marginStart="4dp"
+            app:layout_constraintBottom_toBottomOf="@id/view_conversation_message"
+            app:layout_constraintStart_toEndOf="@id/view_conversation_message"
+            android:layout_height="wrap_content" android:id="@+id/view_conversation_time" android:textSize="10sp"/>
+
+
+</android.support.constraint.ConstraintLayout>

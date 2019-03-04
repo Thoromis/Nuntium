@@ -1,38 +1,23 @@
 package nuntium.fhooe.at.nuntium.viewconversation.mvvm
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.provider.Telephony
 import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
-import android.util.Log
 import android.view.MenuItem
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Toast
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.Request
 import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.request.target.SimpleTarget
-import com.bumptech.glide.request.target.SizeReadyCallback
-import com.bumptech.glide.request.target.Target
-import com.bumptech.glide.request.transition.Transition
 import kotlinx.android.synthetic.main.activity_view_conversation_view.*
 import nuntium.fhooe.at.nuntium.R
 import nuntium.fhooe.at.nuntium.room.conversation.Conversation
 import nuntium.fhooe.at.nuntium.room.message.Message
 import nuntium.fhooe.at.nuntium.room.participant.Participant
-import nuntium.fhooe.at.nuntium.utils.GlideApp
 import nuntium.fhooe.at.nuntium.utils.NuntiumPreferences
 import nuntium.fhooe.at.nuntium.viewconversation.MessagesAdapter
 import java.util.*
@@ -57,18 +42,17 @@ class ViewConversationView : AppCompatActivity(),ViewConversationMVVM.View {
 
     private fun initMVVM() {
         //viewModel = ViewModelProviders.of(this).get(ViewConversationViewModel::class.java)
-        var participant = intent.getSerializableExtra("receiver")
+        val participant = intent.getSerializableExtra("receiver")
         var conversation = intent.getSerializableExtra("conversation")
-
-        viewModel = ViewConversationViewModel(this,participant as Participant,
-            Conversation(1,"MoinMoin", Date(System.currentTimeMillis())),NuntiumPreferences.getParticipantId(this))
-
 
         if(conversation == null) {
             conversation = Conversation(1,"MoinMoin",Date(System.currentTimeMillis()))
         }
 
-        initViews((conversation as Conversation).topic,"${(participant as Participant).firstName} ${participant.lastName}")
+        viewModel = ViewConversationViewModel(this,participant as Participant,
+            conversation as Conversation,NuntiumPreferences.getParticipantId(this))
+
+        initViews(conversation.topic,"${participant.firstName} ${participant.lastName}")
         setImageWithGlide(participant)
     }
 

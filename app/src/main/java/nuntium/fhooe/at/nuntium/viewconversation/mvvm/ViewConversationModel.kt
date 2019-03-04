@@ -60,7 +60,7 @@ class ViewConversationModel(private val viewModel: ViewConversationMVVM.ViewMode
             parts, page -> messageNetworkFetchingFinished(parts,page)
         }
 
-        repository.fetchAllMessagesFromDatabase {
+        repository.fetchAllMessagesFromDatabase (viewModel.conversation.id) {
            messageDatabaseFetchingFinished(it)
         }
     }

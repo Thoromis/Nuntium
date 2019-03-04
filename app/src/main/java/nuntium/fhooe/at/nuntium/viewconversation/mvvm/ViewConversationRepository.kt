@@ -44,7 +44,7 @@ class ViewConversationRepository : ViewConversationMVVM.Repository {
     override fun fetchMessagesFromPage(nextPage: Int, fetchingFinished: (List<Message>, Int) -> Unit) {
         Log.i(Constants.LOG_TAG, "Fetching messages from page $nextPage")
 
-        messageService.getMessagesOnPage(1, 20).enqueue(object : Callback<List<Message>> {
+        messageService.getMessagesOnPage(nextPage, 20).enqueue(object : Callback<List<Message>> {
             override fun onFailure(call: Call<List<Message>>, t: Throwable) {
                 Log.i(Constants.LOG_TAG, "Error while fetching messages from page $nextPage...")
                 t.printStackTrace()
@@ -61,10 +61,10 @@ class ViewConversationRepository : ViewConversationMVVM.Repository {
         })
     }
 
-    override fun fetchAllMessagesFromDatabase(fetchingFinished: (LiveData<List<Message>>) -> Unit) {
+    override fun fetchAllMessagesFromDatabase(convID: Int,fetchingFinished: (LiveData<List<Message>>) -> Unit) {
         disposables.add(
             Observable.just(
-                DatabaseCreator.database.messageDaoAccess().getAllMessages()
+                DatabaseCreator.database.messageDaoAccess().getMessagesByConversationId(convID)
             )
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

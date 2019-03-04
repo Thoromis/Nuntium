@@ -43,7 +43,7 @@ interface ViewConversationMVVM {
         fun updateMessagesInDatabase(messages: List<Message>)
         fun addMessageToDatabase(message: Message)
         fun fetchMessagesFromPage(nextPage : Int, fetchingFinished: (List<Message>,Int) -> Unit)
-        fun fetchAllMessagesFromDatabase(fetchingFinished: (LiveData<List<Message>>) -> Unit)
+        fun fetchAllMessagesFromDatabase(convID: Int,fetchingFinished: (LiveData<List<Message>>) -> Unit)
         fun fetchAllMessagesFromNetwork(fetchingFinished: (List<Message>, Int) -> Unit)
         fun sendMessageViaNetwork(message: NetworkMessage,sendingFinished: (Message?) -> Unit)
         fun deleteMessagesFromDatabase(messages: List<Message>)
