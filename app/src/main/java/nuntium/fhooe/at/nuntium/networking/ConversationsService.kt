@@ -1,13 +1,11 @@
 package nuntium.fhooe.at.nuntium.networking
 
+import nuntium.fhooe.at.nuntium.networking.entity.NetworkConversation
 import nuntium.fhooe.at.nuntium.room.conversation.Conversation
 import nuntium.fhooe.at.nuntium.room.message.Message
 import nuntium.fhooe.at.nuntium.room.participant.Participant
 import retrofit2.Call
-import retrofit2.http.GET
-import retrofit2.http.Headers
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface ConversationsService {
     @Headers("content-type: application/json")
@@ -21,4 +19,8 @@ interface ConversationsService {
     @Headers("content-type: application/json")
     @GET("api/participants/{participantId}")
     fun getParticipantOfId(@Path("participantId") participantId: Int): Call<Participant>
+
+    @Headers("content-type: application/json")
+    @POST("api/conversations")
+    fun postConversation(@Body conversation: NetworkConversation) : Call<Conversation>
 }

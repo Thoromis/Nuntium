@@ -10,4 +10,6 @@ data class Conversation(
     @PrimaryKey(autoGenerate = false) var id: Int,
     var topic: String,
     var creationDate: Date
-) : Serializable
+) : Serializable {
+    constructor() : this(-1, "", Date())
+}

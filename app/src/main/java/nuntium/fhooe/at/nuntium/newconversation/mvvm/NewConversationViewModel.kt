@@ -1,6 +1,7 @@
 package nuntium.fhooe.at.nuntium.newconversation.mvvm
 
 import android.arch.lifecycle.LiveData
+import nuntium.fhooe.at.nuntium.room.conversation.Conversation
 import nuntium.fhooe.at.nuntium.room.participant.Participant
 
 class NewConversationViewModel(private val view: NewConversationMVVM.View) : NewConversationMVVM.ViewModel {
@@ -27,7 +28,8 @@ class NewConversationViewModel(private val view: NewConversationMVVM.View) : New
 
     override fun getCurrentParticipant(): Int = view.getCurrentParticipant()
 
-    override fun startConversationWithParticipant(other: Participant) = view.startConversationWithParticipant(other)
+    override fun startConversationWithParticipant(other: Participant, conversation: Conversation) =
+        view.startConversationWithParticipant(other, conversation)
 
     override fun startUpFinished() = model.startUpFinished()
 
@@ -48,4 +50,8 @@ class NewConversationViewModel(private val view: NewConversationMVVM.View) : New
 
     override fun displayNoParticipantSelected() =
         view.displayMessage("You need to select a participant before you can start a conversation.")
+
+    override fun showContentDialog() = view.showContentDialog("test")
+
+    override fun topicChoosen(topic: String) = model.topicChoosen(topic)
 }

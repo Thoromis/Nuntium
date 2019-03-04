@@ -4,6 +4,8 @@ import android.arch.lifecycle.LiveData
 import android.util.Log
 import com.bumptech.glide.Glide.init
 import io.reactivex.disposables.Disposables
+import nuntium.fhooe.at.nuntium.networking.entity.NetworkConversation
+import nuntium.fhooe.at.nuntium.room.conversation.Conversation
 import nuntium.fhooe.at.nuntium.room.participant.Participant
 import nuntium.fhooe.at.nuntium.utils.Constants.LOG_TAG
 
@@ -11,6 +13,7 @@ class NewConversationModel(private val viewModel: NewConversationMVVM.ViewModel)
     private val repository: NewConversationMVVM.Repository
     private var disposable = Disposables.disposed()
     private var networkParticipants = mutableListOf<Participant>()
+    private var selected: Participant? = null
 
     init {
         repository = NewConversationRepository()
@@ -18,7 +21,10 @@ class NewConversationModel(private val viewModel: NewConversationMVVM.ViewModel)
 
     override fun submitClicked(selected: Participant?) = when (selected) {
         null -> viewModel.displayNoParticipantSelected()
-        else -> viewModel.startConversationWithParticipant(selected)
+        else -> {
+            viewModel.showContentDialog()
+            this.selected = selected
+        }
     }
 
     override fun participantSelected() = viewModel.activateButton()
@@ -39,7 +45,18 @@ class NewConversationModel(private val viewModel: NewConversationMVVM.ViewModel)
             }
             networkParticipants.isEmpty() -> viewModel.updateRecyclerView(participants)
         }
+    }
 
+    override fun topicChoosen(topic: String) {
+        repository.postConversationToServer(NetworkConversation(topic)) {
+            conversationPosted(it)
+        }
+    }
+
+    private fun conversationPosted(conversation: Conversation) {
+        selected?.let {
+            viewModel.startConversationWithParticipant(it, conversation)
+        }
     }
 
     private fun participantNetworkFetchingFinished(participants: List<Participant>, nextPage: Int) {

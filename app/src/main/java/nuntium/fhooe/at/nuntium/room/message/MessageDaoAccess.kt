@@ -24,5 +24,5 @@ interface MessageDaoAccess {
     fun deleteMessage(message: Message)
 
     @Query("SELECT * FROM Message WHERE conversationId= :conversationId ORDER BY createdDate DESC LIMIT 1")
-    fun getLastMessageFromCoversationById(conversationId: Int): LiveData<List<Message>>
+    fun getLastMessageFromCoversationById(conversationId: Int): LiveData<Message>
 }

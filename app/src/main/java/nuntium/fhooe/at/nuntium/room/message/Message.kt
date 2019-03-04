@@ -10,25 +10,25 @@ import nuntium.fhooe.at.nuntium.room.participant.Participant
 import java.util.*
 
 @Entity
-    (
-    foreignKeys = [ForeignKey(
-        entity = Conversation::class,
-        parentColumns = ["id"],
-        childColumns = ["conversationId"],
-        onDelete = CASCADE
-    ), ForeignKey(
-        entity = Participant::class,
-        parentColumns = ["id"],
-        childColumns = ["senderId"],
-        onDelete = ForeignKey.NO_ACTION
-    ), ForeignKey(
-        entity = Participant::class,
-        parentColumns = ["id"],
-        childColumns = ["receiverId"],
-        onDelete = ForeignKey.NO_ACTION
-    )
-    ]
-)
+//    (
+//    foreignKeys = [ForeignKey(
+//        entity = Conversation::class,
+//        parentColumns = ["id"],
+//        childColumns = ["conversationId"],
+//        onDelete = CASCADE
+//    ), ForeignKey(
+//        entity = Participant::class,
+//        parentColumns = ["id"],
+//        childColumns = ["senderId"],
+//        onDelete = ForeignKey.NO_ACTION
+//    ), ForeignKey(
+//        entity = Participant::class,
+//        parentColumns = ["id"],
+//        childColumns = ["receiverId"],
+//        onDelete = ForeignKey.NO_ACTION
+//    )
+//    ]
+//)
 data class Message(
     var content: String,
     var conversationId: Int,

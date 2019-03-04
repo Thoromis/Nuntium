@@ -7,7 +7,7 @@ import retrofit2.create
 object ParticipantServiceFactory {
     fun build(): ParticipantService {
         return Retrofit.Builder()
-            .baseUrl("http://10.0.0.11:8080/")
+            .baseUrl("http://192.168.1.109:8080/")
             //.baseUrl("http://localhost:8080/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()

@@ -1,18 +1,17 @@
 package nuntium.fhooe.at.nuntium.newconversation.mvvm
 
 import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.content.IntentSender
 import android.util.Log
 import io.reactivex.Completable
-import io.reactivex.Flowable
 import io.reactivex.Observable
-import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import nuntium.fhooe.at.nuntium.networking.ConversationsServiceFactory
 import nuntium.fhooe.at.nuntium.networking.ParticipantServiceFactory
+import nuntium.fhooe.at.nuntium.networking.entity.NetworkConversation
 import nuntium.fhooe.at.nuntium.room.DatabaseCreator
+import nuntium.fhooe.at.nuntium.room.conversation.Conversation
 import nuntium.fhooe.at.nuntium.room.participant.Participant
 import nuntium.fhooe.at.nuntium.utils.Constants.LOG_TAG
 import retrofit2.Call
@@ -22,6 +21,7 @@ import retrofit2.Response
 class NewConversationRepository : NewConversationMVVM.Repository {
     private val participantService = ParticipantServiceFactory.build()
     private val disposables: CompositeDisposable = CompositeDisposable()
+    private val conversationService = ConversationsServiceFactory.build()
 
     override fun fetchAllParticipantsFromNetwork(fetchingFinished: (List<Participant>, Int) -> Unit) {
         participantService.getAllParticipants().enqueue(object : Callback<List<Participant>> {
@@ -44,7 +44,7 @@ class NewConversationRepository : NewConversationMVVM.Repository {
     override fun fetchParticipantsFromPage(nextPage: Int, fetchingFinished: (List<Participant>, Int) -> Unit) {
         Log.i(LOG_TAG, "Fetching participants from page $nextPage")
 
-        participantService.getParticipantsOnPage(1, 20).enqueue(object : Callback<List<Participant>> {
+        participantService.getParticipantsOnPage(nextPage, 20).enqueue(object : Callback<List<Participant>> {
             override fun onFailure(call: Call<List<Participant>>, t: Throwable) {
                 Log.i(LOG_TAG, "Error while fetching participants from page $nextPage...")
                 t.printStackTrace()
@@ -86,6 +86,31 @@ class NewConversationRepository : NewConversationMVVM.Repository {
                     it.printStackTrace()
                 })
         )
+    }
+
+    override fun postConversationToServer(conversation: NetworkConversation, taskFinished: (Conversation) -> Unit) {
+        conversationService.postConversation(conversation).enqueue(object : Callback<Conversation> {
+            override fun onFailure(call: Call<Conversation>, t: Throwable) {
+                Log.i(LOG_TAG, "Error while posting conversation to server...")
+                t.printStackTrace()
+                taskFinished(Conversation())
+            }
+
+            override fun onResponse(call: Call<Conversation>, response: Response<Conversation>) {
+                Log.i(LOG_TAG, "Posting conversation was successful")
+                response.body()?.let {
+                    taskFinished(it)
+                }
+            }
+        })
+    }
+
+    override fun saveConversationToDatabase(conversation: Conversation) {
+        disposables.add(Completable.fromAction {
+            DatabaseCreator.database.conversationDaoAccess().insertConversation(conversation)
+        }
+            .subscribeOn(Schedulers.io())
+            .subscribe { Log.i(LOG_TAG, "Conversation inserted into room...") })
     }
 
     override fun deleteParticipantsFromDatabase(participants: List<Participant>) {

@@ -7,7 +7,7 @@ object MessagesServiceFactory {
 
     fun build(): MessagesService {
         return Retrofit.Builder()
-            .baseUrl("http://10.0.0.12:8080/")
+            .baseUrl("http://192.168.1.109:8080/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(MessagesService::class.java)
