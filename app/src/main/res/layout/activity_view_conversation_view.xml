@@ -44,7 +44,8 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginBottom="10dp"
                 android:paddingStart="20dp" android:textAlignment="viewStart"
-                android:paddingEnd="20dp"/>
+                android:paddingEnd="20dp" android:gravity="center" android:layout_gravity="center"
+                android:foregroundGravity="center" android:layout_marginTop="10dp"/>
         <Button
                 android:layout_width="50dp"
                 android:layout_height="50dp"
@@ -53,7 +54,7 @@
                 android:layout_marginRight="10dp"
                 android:background="@drawable/view_conversation_sendbt_background"
                 android:drawableStart="@drawable/view_conversation_icon_send" android:padding="15dp"
-                android:layout_marginBottom="10dp" android:layout_marginTop="3dp" android:gravity="bottom"
-        />
+                android:layout_marginBottom="10dp" android:layout_marginTop="10dp"
+                android:gravity="center" android:foregroundGravity="center" android:layout_gravity="center"/>
     </LinearLayout>
 </LinearLayout>
