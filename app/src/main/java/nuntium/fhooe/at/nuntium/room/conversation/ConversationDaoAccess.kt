@@ -6,7 +6,7 @@ import android.arch.persistence.room.*
 @Dao
 interface ConversationDaoAccess {
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertConversation(conversation: Conversation)
 
     @Query("SELECT * FROM Conversation WHERE id= :conversationId")

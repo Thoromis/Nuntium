@@ -20,6 +20,7 @@ import nuntium.fhooe.at.nuntium.newconversation.mvvm.NewConversationView
 import nuntium.fhooe.at.nuntium.room.conversation.Conversation
 import nuntium.fhooe.at.nuntium.room.message.Message
 import nuntium.fhooe.at.nuntium.room.participant.Participant
+import nuntium.fhooe.at.nuntium.utils.Constants
 import nuntium.fhooe.at.nuntium.utils.NuntiumPreferences
 import nuntium.fhooe.at.nuntium.viewconversation.mvvm.ViewConversationRepository
 import nuntium.fhooe.at.nuntium.viewconversation.mvvm.ViewConversationView
@@ -28,7 +29,7 @@ import java.util.*
 
 class ConversationOverviewView : AppCompatActivity(),
     ConversationOverviewMVVM.View {
-    private lateinit var viewModel: ConversationOverviewMVVM.ViewModel
+    private lateinit var viewModel: ConversationOverviewViewModel
     lateinit var  conversationsAdapter: ConversationsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,6 +74,24 @@ class ConversationOverviewView : AppCompatActivity(),
     override fun setConversationsInRecyclerView(conversations: ArrayList<ConversationItem>){
         conversationsAdapter.conversationList = conversations
     }
+    override fun addConversationItem(item: ConversationItem){
+        conversationsAdapter.addNewConversationItem(item)
+    }
+
+    fun startConversationObservation() {
+        Log.i(Constants.LOG_TAG, "Conversations livedata is now observed in the view!")
+
+        viewModel?.livedataConversations?.let { liveConversationsData ->
+            liveConversationsData.observe(this,
+                Observer<List<Conversation>> { conversations ->
+                    conversations?.let {
+                        viewModel.onConversationsReceived(conversations)
+                        Log.i(Constants.LOG_TAG, "Received updates from database!")
+                    }
+                })
+        }
+    }
+
 
     private fun repoTest() {
         /*
@@ -127,8 +146,8 @@ class ConversationOverviewView : AppCompatActivity(),
         //        Constants.i("LOG_TAG", "Insertion of objects is finished...")
         //    }
         //}
-            //.subscribeOn(Schedulers.computation())
-            //.subscribe()
+        //.subscribeOn(Schedulers.computation())
+        //.subscribe()
     }
 
     private fun startAddParticipant() {

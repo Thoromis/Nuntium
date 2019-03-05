@@ -9,8 +9,12 @@ import retrofit2.http.*
 
 interface ConversationsService {
     @Headers("content-type: application/json")
-    @GET("api/conversations")
+    @GET("api/conversations?sort=createdDate,asc")
     fun getAllConversations(): Call<List<Conversation>>
+
+    @Headers("content-type: application/json")
+    @GET("api/conversations")
+    fun getConversationsOnPage(@Query("page") page: Int, @Query("size") size: Int): Call<List<Conversation>>
 
     @Headers("content-type: application/json")
     @GET("api/messages")

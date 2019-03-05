@@ -16,10 +16,10 @@ import org.w3c.dom.Text
 
 class ConversationsAdapter(val startConversation: (data: ConversationItem) -> Unit) : RecyclerView.Adapter<ConversationsAdapter.ConversationsHolder>() {
     var conversationList = ArrayList<ConversationItem>()
-    set(value) {
-        field = value
-        notifyDataSetChanged()
-    }
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ConversationsHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.conversation_item, parent, false)
@@ -33,7 +33,7 @@ class ConversationsAdapter(val startConversation: (data: ConversationItem) -> Un
     override fun onBindViewHolder(holder: ConversationsHolder, position: Int) {
         val currentConversationItem = conversationList[position]
         holder.textViewConversationTitle.text = currentConversationItem.conversation.topic
-        holder.textViewConversationDescription.text = currentConversationItem.lastMessage.content
+        holder.textViewConversationDescription.text = currentConversationItem.lastMessage?.content
         holder.textViewConversationPartner.text = currentConversationItem.conversationPartner.firstName + " " + currentConversationItem.conversationPartner.lastName
 
         Glide
@@ -44,6 +44,16 @@ class ConversationsAdapter(val startConversation: (data: ConversationItem) -> Un
         holder.itemView.setOnClickListener {
             startConversation(conversationList[position])
         }
+    }
+
+    fun addNewConversationItem(item: ConversationItem){
+        // check if the item is already in the list.
+        conversationList.forEach {
+            if (it.conversation.id == item.conversation.id)
+                return
+        }
+        conversationList.add(item)
+        notifyItemInserted(conversationList.size - 1)
     }
 
 
