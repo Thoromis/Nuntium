@@ -49,8 +49,14 @@ class ConversationsAdapter(val startConversation: (data: ConversationItem) -> Un
     fun addNewConversationItem(item: ConversationItem){
         // check if the item is already in the list.
         conversationList.forEach {
-            if (it.conversation.id == item.conversation.id)
+            if (it.conversation.id == item.conversation.id){
+                if (it.lastMessage.id != item.lastMessage.id){
+                    val index = conversationList.indexOf(it)
+                    conversationList[index] = item
+                    notifyItemChanged(index)
+                }
                 return
+            }
         }
         conversationList.add(item)
         notifyItemInserted(conversationList.size - 1)

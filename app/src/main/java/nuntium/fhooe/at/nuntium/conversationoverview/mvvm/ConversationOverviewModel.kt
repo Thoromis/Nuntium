@@ -11,6 +11,7 @@ import io.reactivex.schedulers.Schedulers
 import nuntium.fhooe.at.nuntium.conversationoverview.NetworkDataLoader
 import nuntium.fhooe.at.nuntium.room.DatabaseCreator
 import nuntium.fhooe.at.nuntium.utils.Constants.LOG_TAG
+import java.util.concurrent.TimeUnit
 
 class ConversationOverviewModel(val viewModel: ConversationOverviewViewModel) :
     ConversationOverviewMVVM.Model {
@@ -23,7 +24,7 @@ class ConversationOverviewModel(val viewModel: ConversationOverviewViewModel) :
         val conversationItemList = mutableListOf<ConversationItem>()
         val disposable = Completable.fromAction{
             conversations.forEach {
-                DatabaseCreator.database.messageDaoAccess().getLastMessageFromCoversationById(it.id)?.let {message->
+                DatabaseCreator.database.messageDaoAccess().getLastMessageFromConversationById(it.id)?.let {message->
                     val senderId = message.senderId
                     val receiverId = message.receiverId
                     val userId = viewModel.userParticipantId
@@ -67,7 +68,12 @@ class ConversationOverviewModel(val viewModel: ConversationOverviewViewModel) :
     }
 
     override fun loadAllConversationsForUser() {
-        networkDataLoader.fetchAllData()
+        Observable.create<Unit> {
+            Schedulers.newThread().schedulePeriodicallyDirect({
+                networkDataLoader.fetchAllData()
+            },0,2000, TimeUnit.MILLISECONDS)
+        }.subscribe()
+
         loadAllConversationsFromDatabase()
     }
 }
