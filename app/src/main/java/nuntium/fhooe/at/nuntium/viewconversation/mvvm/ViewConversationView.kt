@@ -50,10 +50,6 @@ class ViewConversationView : AppCompatActivity(), ViewConversationMVVM.View {
         val participant = intent.getSerializableExtra("receiver")
         var conversation = intent.getSerializableExtra("conversation")
 
-        if (conversation == null) {
-            conversation = Conversation(1, "MoinMoin", Date(System.currentTimeMillis()))
-        }
-
         viewModel = ViewConversationViewModel(
             this, participant as Participant,
             conversation as Conversation, NuntiumPreferences.getParticipantId(this)

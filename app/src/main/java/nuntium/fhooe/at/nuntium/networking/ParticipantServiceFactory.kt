@@ -14,7 +14,7 @@ object ParticipantServiceFactory {
             .build()
 
         return Retrofit.Builder()
-            .baseUrl("http://192.168.1.109:8080/")
+            .baseUrl("http://37.252.185.148:8080/")
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
