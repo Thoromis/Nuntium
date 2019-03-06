@@ -48,8 +48,8 @@ class MessagePollingService : JobService() {
         return false
     }
 
-    private fun fetchConversationsOnPage(params: JobParameters?, nextPage: Int) {
-        conversationFactory.().enqueue(object : Callback<List<Conversation>> {
+    private fun fetchConversationsOnPage(params: JobParameters?, messages: List<Message>, nextPage: Int) {
+        conversationFactory.getConversationsOnPage(nextPage, 20).enqueue(object : Callback<List<Conversation>> {
             override fun onFailure(call: Call<List<Conversation>>, t: Throwable) {
                 Log.i(LOG_TAG, "Job scheduler failed during message fetching, probably no internet connection...")
                 t.printStackTrace()
@@ -65,13 +65,13 @@ class MessagePollingService : JobService() {
                 }
 
                 response.body()?.let {
-                    val filteredConversation = it.filterConversations(message)
+                    val filteredConversation = it.filterConversations(messages)
 
                     //Show notification
-                    showNotification(message.sortedBy { message -> message.senderId }, filteredConversation)
+                    showNotification(messages.sortedBy { message -> message.senderId }, filteredConversation)
 
                     if (it.count() == 20) {
-                        fetchConversationsOnPage(params, 1)
+                        fetchConversationsOnPage(params, messages, nextPage + 1)
                     } else {
                         //Reschedule service
                         rescheduleService()
@@ -103,7 +103,7 @@ class MessagePollingService : JobService() {
                     val filteredMessages = filterMessages(it)
                     insertMessagesIntoDb(filteredMessages)
 
-                    showNotification(filteredMessages)
+                    //showNotification(filteredMessages, )
 
                     if (it.count() == 20) {
                         fetchMessageOnPage(params, nextPage + 1)
@@ -119,42 +119,7 @@ class MessagePollingService : JobService() {
 
         })
     }
-
-    private fun startConversationFetching(message: List<Message>, params: JobParameters?) {
-        conversationFactory.getAllConversations().enqueue(object : Callback<List<Conversation>> {
-            override fun onFailure(call: Call<List<Conversation>>, t: Throwable) {
-                Log.i(LOG_TAG, "Job scheduler failed during message fetching, probably no internet connection...")
-                t.printStackTrace()
-                rescheduleService()
-                jobFinished(params, true)
-            }
-
-            override fun onResponse(call: Call<List<Conversation>>, response: Response<List<Conversation>>) {
-                if (!response.isSuccessful) {
-                    Log.i(LOG_TAG, "Message fetching failed in Job Scheduler with code: ${response.code()} and message: ${response.message()}")
-                    rescheduleService()
-                    return
-                }
-
-                response.body()?.let {
-                    val filteredConversation = it.filterConversations(message)
-
-                    //Show notification
-                    showNotification(message.sortedBy { message -> message.senderId }, filteredConversation)
-
-                    if (it.count() == 20) {
-                        fetchConversationsOnPage(params, 1)
-                    } else {
-                        //Reschedule service
-                        rescheduleService()
-
-                        jobFinished(params, false)
-                    }
-                }
-            }
-        })
-    }
-
+    
     private fun startMessageFetching(params: JobParameters?) {
         Observable.just(
             messageFactory.getMessageAfterDate(NuntiumPreferences.getParticipantId(this)).enqueue(object :
@@ -178,7 +143,10 @@ class MessagePollingService : JobService() {
                         insertMessagesIntoDb(filteredMessages)
                         //Show notification
                         //to be done
-                        showNotification(filteredMessages.sortedBy { it.senderId })
+
+                        //showNotification(filteredMessages.sortedBy { it.senderId })
+
+                        fetchConversationsOnPage(params, filteredMessages, 0)
 
                         if (it.count() == 20) {
                             fetchMessageOnPage(params, 1)
