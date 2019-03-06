@@ -28,8 +28,7 @@ class NewConversationViewModel(private val view: NewConversationMVVM.View) : New
 
     override fun getCurrentParticipant(): Int = view.getCurrentParticipant()
 
-    override fun startConversationWithParticipant(other: Participant, conversation: Conversation) =
-        view.startConversationWithParticipant(other, conversation)
+    override fun startConversationWithParticipant(other: Participant, conversation: Conversation) = view.startConversationWithParticipant(other, conversation)
 
     override fun startUpFinished() = model.startUpFinished()
 
@@ -45,13 +44,15 @@ class NewConversationViewModel(private val view: NewConversationMVVM.View) : New
 
     override fun updateRecyclerView(participants: List<Participant>) = view.updateRecyclerView(participants)
 
-    override fun displayNoNetwork() =
-        view.displayMessage("You seem to be offline, so Nuntium is using your locally saved participants.")
+    override fun displayNoNetworkForConversationCreation() = view.displayMessage("You seem to be offline, to create a conversation an internet connection is needed. Please try again later.")
 
-    override fun displayNoParticipantSelected() =
-        view.displayMessage("You need to select a participant before you can start a conversation.")
+    override fun displayNoNetwork() = view.displayMessage("You seem to be offline, so Nuntium is using your locally saved participants.")
+
+    override fun displayNoParticipantSelected() = view.displayMessage("You need to select a participant before you can start a conversation.")
 
     override fun showContentDialog() = view.showContentDialog("test")
 
     override fun topicChoosen(topic: String) = model.topicChoosen(topic)
+
+    override fun cancelDialog() = view.cancelDialog()
 }

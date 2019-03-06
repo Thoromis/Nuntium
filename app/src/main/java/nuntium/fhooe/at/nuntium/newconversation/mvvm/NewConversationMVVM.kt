@@ -22,6 +22,7 @@ interface NewConversationMVVM {
         fun updateRecyclerView(participants: List<Participant>)
         fun getCurrentParticipant(): Int
         fun showContentDialog(dialogMessage: String)
+        fun cancelDialog()
     }
 
     interface ViewModel {
@@ -41,6 +42,8 @@ interface NewConversationMVVM {
         fun getCurrentParticipant(): Int
         fun showContentDialog()
         fun topicChoosen(topic: String)
+        fun cancelDialog()
+        fun displayNoNetworkForConversationCreation()
     }
 
     interface Model {
@@ -57,7 +60,7 @@ interface NewConversationMVVM {
         fun deleteParticipantsFromDatabase(participants: List<Participant>)
         fun fetchAllParticipantsFromNetwork(fetchingFinished: (List<Participant>, Int) -> Unit)
         fun fetchParticipantsFromPage(nextPage: Int, fetchingFinished: (List<Participant>, Int) -> Unit)
-        fun postConversationToServer(conversation: NetworkConversation, taskFinished: (Conversation) -> Unit)
+        fun postConversationToServer(conversation: NetworkConversation, taskFinished: (Conversation?) -> Unit)
         fun saveConversationToDatabase(conversation: Conversation)
     }
 }

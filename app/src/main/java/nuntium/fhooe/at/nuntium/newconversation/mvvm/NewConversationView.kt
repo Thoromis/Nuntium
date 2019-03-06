@@ -32,6 +32,7 @@ class NewConversationView : NewConversationMVVM.View, AppCompatActivity() {
     private lateinit var btSubmit: Button
     private lateinit var toolbar: Toolbar
     private lateinit var rvAdapter: ParticipantAdapter
+    private var dialog: AlertDialog? = null
     private var viewModel: NewConversationMVVM.ViewModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -116,11 +117,11 @@ class NewConversationView : NewConversationMVVM.View, AppCompatActivity() {
     override fun showContentDialog(dialogMessage: String) {
         val builder = AlertDialog.Builder(this)
         val view = layoutInflater.inflate(R.layout.conversation_topic_dialog, null)
-        val dialog = builder.setView(view)
+        dialog = builder.setView(view)
             .show()
 
         view.conversation_dialog_cancel.setOnClickListener {
-            dialog.dismiss()
+            dialog?.dismiss()
         }
         view.conversation_dialog_submit.setOnClickListener {
             val input: EditText = view.findViewById(R.id.conversation_dialog_et_topic)
@@ -129,6 +130,10 @@ class NewConversationView : NewConversationMVVM.View, AppCompatActivity() {
                 input.text.isEmpty() -> input.shakeErrorView()
             }
         }
+    }
+
+    override fun cancelDialog() {
+        dialog?.dismiss()
     }
 
     override fun displayMessage(message: String) = Snackbar.make(btSubmit, message, Snackbar.LENGTH_LONG).show()
