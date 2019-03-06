@@ -20,6 +20,12 @@ class NetworkDataLoader(private val disposables: CompositeDisposable, private va
     private val conversationsService = ConversationsServiceFactory.build()
     private val participantService = ParticipantServiceFactory.build()
     private val messagesService = MessagesServiceFactory.build()
+
+    private var networkParticipants = mutableListOf<Participant>()
+    private var networkMessages = mutableListOf<Message>()
+    private var networkConversations = mutableListOf<Conversation>()
+
+
     fun fetchAllData(){
         // fetch Conversations
         fetchAllConversationsFromNetwork()
@@ -34,7 +40,7 @@ class NetworkDataLoader(private val disposables: CompositeDisposable, private va
             override fun onFailure(call: Call<List<Conversation>>, t: Throwable) {
                 Log.i(Constants.LOG_TAG, "Error while fetching conversations from the server...")
                 t.printStackTrace()
-                participantNetworkFetchingFinished(listOf(), -1)
+                Log.i(Constants.LOG_TAG, "Working locally, internet connection seems to not work out...")
             }
 
             override fun onResponse(call: Call<List<Conversation>>, response: Response<List<Conversation>>) {
@@ -51,6 +57,7 @@ class NetworkDataLoader(private val disposables: CompositeDisposable, private va
         //filter logged in user
         when {
             !conversations.isEmpty() -> {
+                networkConversations.addAll(conversations)
                 updateConversationsInDatabase(conversations)
             }
             else -> {
@@ -61,8 +68,16 @@ class NetworkDataLoader(private val disposables: CompositeDisposable, private va
         }
 
         //Fetch participants from next page if needed
-        if (nextPage != -1) fetchConversationsFromPage(nextPage)
+        if (nextPage != -1) {
+            fetchConversationsFromPage(nextPage)
+        } else {
+            // finished fetching data and updated
+            // check if something is to delete in the database
+
+        }
     }
+
+
     private fun fetchConversationsFromPage(nextPage: Int) {
         Log.i(Constants.LOG_TAG, "Fetching conversations from page $nextPage")
 
@@ -70,7 +85,7 @@ class NetworkDataLoader(private val disposables: CompositeDisposable, private va
             override fun onFailure(call: Call<List<Conversation>>, t: Throwable) {
                 Log.i(Constants.LOG_TAG, "Error while fetching conversations from page $nextPage...")
                 t.printStackTrace()
-                conversationNetworkFetchingFinished(listOf(), -1)
+                Log.i(Constants.LOG_TAG, "Working locally, internet connection seems to not work out...")
             }
 
             override fun onResponse(call: Call<List<Conversation>>, response: Response<List<Conversation>>) {
@@ -98,7 +113,7 @@ class NetworkDataLoader(private val disposables: CompositeDisposable, private va
             override fun onFailure(call: Call<List<Participant>>, t: Throwable) {
                 Log.i(Constants.LOG_TAG, "Error while fetching participants from the server...")
                 t.printStackTrace()
-                participantNetworkFetchingFinished(listOf(), -1)
+                Log.i(Constants.LOG_TAG, "Working locally, internet connection seems to not work out...")
             }
 
             override fun onResponse(call: Call<List<Participant>>, response: Response<List<Participant>>) {
@@ -163,7 +178,7 @@ class NetworkDataLoader(private val disposables: CompositeDisposable, private va
             override fun onFailure(call: Call<List<Message>>, t: Throwable) {
                 Log.i(Constants.LOG_TAG, "Error while fetching messages from the server...")
                 t.printStackTrace()
-                participantNetworkFetchingFinished(listOf(), -1)
+                messagesNetworkFetchingFinished(listOf(), -1)
             }
 
             override fun onResponse(call: Call<List<Message>>, response: Response<List<Message>>) {
