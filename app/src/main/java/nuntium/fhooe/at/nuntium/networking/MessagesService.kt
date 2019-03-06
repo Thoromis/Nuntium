@@ -25,4 +25,7 @@ interface MessagesService {
     @GET("api/messages")
     fun getMessagesOnPage(@Query("page") page: Int, @Query("size") size: Int): Call<List<Message>>
 
+    @Headers("content-type: application/json")
+    @GET("api/messages")
+    fun getMessageAfterDate(@Query("receiverId.equals") receiverId: Int) : Call<List<Message>>
 }

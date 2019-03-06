@@ -20,13 +20,27 @@ class NuntiumPreferences {
             return sharedpreferences.getInt(PARTICIPANT_ID, -1)
         }
 
+        fun updateLastFetchDate(context: Context, date: String) {
+            val sharedPreferences = context.getSharedPreferences(SHARED_PREF_KEY, Context.MODE_PRIVATE)
+
+            sharedPreferences
+                .edit()
+                .putString(CREATION_DATE, date)
+                .apply()
+        }
+
+        fun getLastFetchDate(context: Context) : String {
+            return context.getSharedPreferences(SHARED_PREF_KEY, Context.MODE_PRIVATE).getString(CREATION_DATE, "")
+        }
+
         fun getParticipantName(context: Context): String {
-            val sharedpreferences = context.getSharedPreferences(SHARED_PREF_KEY, Context.MODE_PRIVATE)
-            return sharedpreferences.getString(PARTICIPANT_NAME, "")
+            val sharedPreferences = context.getSharedPreferences(SHARED_PREF_KEY, Context.MODE_PRIVATE)
+            return sharedPreferences.getString(PARTICIPANT_NAME, "")
         }
 
         private const val SHARED_PREF_KEY = "NuntiumPreferences"
         private const val PARTICIPANT_ID = "id"
         private const val PARTICIPANT_NAME = "fullname"
+        private const val CREATION_DATE = "creationDate"
     }
 }

@@ -8,7 +8,7 @@ interface MessageDaoAccess {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertMessage(message: Message)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertMessages(messages: List<Message>)
 
     @Query("SELECT * FROM Message")

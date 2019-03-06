@@ -15,6 +15,10 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:usesCleartextTraffic="true"
             tools:ignore="GoogleAppIndexingWarning">
+        <service
+                android:name=".messagepolling.MessagePollingService"
+                android:permission="android.permission.BIND_JOB_SERVICE"
+                android:exported="true"/>
         <activity
                 android:name=".conversationoverview.mvvm.ConversationOverviewView"
                 android:label="@string/app_name"

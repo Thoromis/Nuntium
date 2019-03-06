@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.participant_list_item.view.*
 import nuntium.fhooe.at.nuntium.R
 import nuntium.fhooe.at.nuntium.room.participant.Participant
@@ -34,6 +35,7 @@ class ParticipantAdapter(
                 .load(participant.avatar)
                 .placeholder(ContextCompat.getDrawable(context, R.color.white))
                 .into(participant_item_iv_avatar)
+                .apply { RequestOptions.circleCropTransform() }
         }
 
         when {
