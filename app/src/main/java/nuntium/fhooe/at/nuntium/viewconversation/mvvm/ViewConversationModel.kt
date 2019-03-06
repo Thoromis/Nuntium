@@ -55,7 +55,7 @@ class ViewConversationModel(private val viewModel: ViewConversationMVVM.ViewMode
                 networkMessages.addAll(messages)
             }
             else -> {
-                viewModel.displayNoMessagesYet()
+                viewModel.displayNoNetworkConnection()
             }
         }
 

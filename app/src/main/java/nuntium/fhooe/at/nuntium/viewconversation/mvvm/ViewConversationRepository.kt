@@ -35,7 +35,7 @@ class ViewConversationRepository : ViewConversationMVVM.Repository {
 
     override fun addMessageToDatabase(message: Message) {
         disposables.add(Completable.fromAction {
-                DatabaseCreator.database.messageDaoAccess().insertMessage(message)
+            DatabaseCreator.database.messageDaoAccess().insertMessage(message)
         }
             .subscribeOn(Schedulers.io())
             .subscribe { Log.i(Constants.LOG_TAG, "Message sent updated in database...") })
@@ -61,7 +61,7 @@ class ViewConversationRepository : ViewConversationMVVM.Repository {
         })
     }
 
-    override fun fetchAllMessagesFromDatabase(convID: Int,fetchingFinished: (LiveData<List<Message>>) -> Unit) {
+    override fun fetchAllMessagesFromDatabase(convID: Int, fetchingFinished: (LiveData<List<Message>>) -> Unit) {
         disposables.add(
             Observable.just(
                 DatabaseCreator.database.messageDaoAccess().getMessagesByConversationId(convID)
@@ -96,23 +96,23 @@ class ViewConversationRepository : ViewConversationMVVM.Repository {
         })
     }
 
-    override fun sendMessageViaNetwork(message: NetworkMessage, sendingFinished: (Message?) -> Unit) =
-        messageService.createMessage(message).enqueue(object : Callback<Message> {
-            override fun onFailure(call: Call<Message>, t: Throwable) {
-                Log.e("LOG_TAG", t.message)
-                t.printStackTrace()
-                sendingFinished(null)
-            }
+    override fun sendMessageViaNetwork(message: NetworkMessage, sendingFinished: (Message?) -> Unit) {
+        messageService.createMessage(message).enqueue(
+            object : Callback<Message> {
+                override fun onFailure(call: Call<Message>, t: Throwable) {
+                    Log.e("LOG_TAG", t.message)
+                    t.printStackTrace()
+                    sendingFinished(null)
+                }
 
-            override fun onResponse(call: Call<Message>, response: Response<Message>) {
-                Log.i("LOG_TAG","Sending of message was a success!")
-                sendingFinished(response.body())
-            }
-        })
+                override fun onResponse(call: Call<Message>, response: Response<Message>) {
+                    Log.i("LOG_TAG", "Sending of message was a success!")
+                    sendingFinished(response.body())
+                }
+            })
+    }
 
-
-    override fun deleteMessagesFromDatabase(messages: List<Message>) {
-        Completable.fromAction {
+    override fun deleteMessagesFromDatabase(messages: List<Message>) {Completable.fromAction {
             messages.forEach{ DatabaseCreator.database.messageDaoAccess().deleteMessage(it)}
         }
             .subscribeOn(Schedulers.io())

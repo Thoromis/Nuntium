@@ -27,7 +27,7 @@ interface ViewConversationMVVM {
         fun startUpFinished()
         fun displayNoNetwork()
         fun displayNoMessageText()
-        fun displayNoMessagesYet()
+        fun displayNoNetworkConnection()
         fun recyclerViewDataChanged(messages: List<Message>)
         fun updateRecyclerView(messages: List<Message>)
         fun setEditTextEmpty()

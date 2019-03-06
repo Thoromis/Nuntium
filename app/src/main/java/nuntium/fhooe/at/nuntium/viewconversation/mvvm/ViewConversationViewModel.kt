@@ -44,7 +44,7 @@ class ViewConversationViewModel(private val view: ViewConversationMVVM.View,
 
     override fun displayNoNetwork() = view.displayMessage("You seem to be offline, no sending possible.")
     override fun displayNoMessageText() = view.displayMessage("No text entered.")
-    override fun displayNoMessagesYet() = view.displayMessage("No messages yet.")
+    override fun displayNoNetworkConnection() = view.displayMessage("You seem to be offline, using locally saved messages.")
 
     override fun recyclerViewDataChanged(messages: List<Message>) = model.recyclerViewDataChanged(messages)
 
