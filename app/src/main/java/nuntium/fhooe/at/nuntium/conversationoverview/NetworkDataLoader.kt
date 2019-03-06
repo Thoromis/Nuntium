@@ -62,6 +62,7 @@ class NetworkDataLoader(private val disposables: CompositeDisposable, private va
         //filter logged in user
         when {
             !conversations.isEmpty() -> {
+                updateConversationsInDatabase(conversations)
                 networkConversations.addAll(conversations)
             }
             else -> {
@@ -77,6 +78,7 @@ class NetworkDataLoader(private val disposables: CompositeDisposable, private va
         } else {
             // finished fetching data and updated
             // check if something is to delete in the database
+
             syncConversationsWithDatabase()
         }
     }
