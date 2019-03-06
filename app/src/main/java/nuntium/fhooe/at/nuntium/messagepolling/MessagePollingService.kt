@@ -10,6 +10,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.support.v4.app.ActivityManagerCompat
 import android.util.Log
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -107,11 +108,6 @@ class MessagePollingService : JobService() {
 
                     if (it.count() == 20) {
                         fetchMessageOnPage(params, nextPage + 1)
-                    } else {
-                        //Reschedule service
-                        rescheduleService()
-
-                        jobFinished(params, false)
                     }
                 }
 
@@ -196,7 +192,15 @@ class MessagePollingService : JobService() {
         )
     }
 
+    private fun isAppInForeground() : Boolean {
+        val activityManager = this.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        val runningAppProcesses = activityManager.runningAppProcesses ?: return false
+        return runningAppProcesses.any { it.processName == this.packageName && it.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND }
+    }
+
     private fun showNotification(messages: List<Message>, convs: List<Conversation>) {
+        if(isAppInForeground()) return
+
         conversations.addAll(convs)
         conversations.distinctBy { it.id }
         if(conversations.count() == 0) return

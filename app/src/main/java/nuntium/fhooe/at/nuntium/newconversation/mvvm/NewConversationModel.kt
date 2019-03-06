@@ -59,8 +59,11 @@ class NewConversationModel(private val viewModel: NewConversationMVVM.ViewModel)
     }
 
     override fun topicChoosen(topic: String) {
-        repository.postConversationToServer(NetworkConversation(topic)) {
-            conversationPosted(it)
+        repository.postConversationToServer(NetworkConversation(topic)) { conversation ->
+            if(conversation!= null) conversationPosted(conversation) else  {
+                viewModel.displayNoNetworkForConversationCreation()
+                viewModel.cancelDialog()
+            }
         }
     }
 

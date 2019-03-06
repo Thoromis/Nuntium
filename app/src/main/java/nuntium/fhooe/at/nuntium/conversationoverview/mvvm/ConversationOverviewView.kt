@@ -1,5 +1,7 @@
 package nuntium.fhooe.at.nuntium.conversationoverview.mvvm
 
+import android.app.IntentService
+import android.app.NotificationManager
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
 import android.arch.lifecycle.Observer
@@ -43,7 +45,7 @@ class ConversationOverviewView : AppCompatActivity(),
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        startJobScheduler()
+        //startJobScheduler()
         checkExtras()
 
         viewModel = ConversationOverviewViewModel(this, this.applicationContext)
@@ -71,6 +73,8 @@ class ConversationOverviewView : AppCompatActivity(),
 
         //repoTest()
     }
+
+    override fun updateFetchPreference() = NuntiumPreferences.updateLastFetchDate(this, Date().parseString())
 
     override fun setConversationsInRecyclerView(conversations: ArrayList<ConversationItem>) {
         conversationsAdapter.conversationList = conversations
@@ -100,6 +104,8 @@ class ConversationOverviewView : AppCompatActivity(),
         else Toast.makeText(this, "You are logged in as ${NuntiumPreferences.getParticipantName(applicationContext)}...", Toast.LENGTH_LONG).show()
 
         if (intent.getBooleanExtra(MessagePollingService.UPDATE_FETCH_PREFERENCE, false)) {
+            val notificationManager = getSystemService(IntentService.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.cancel(MessagePollingService.NOTIFICATION_ID)
             NuntiumPreferences.updateLastFetchDate(applicationContext, Date().parseString())
         }
     }

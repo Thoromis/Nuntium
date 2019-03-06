@@ -88,12 +88,12 @@ class NewConversationRepository : NewConversationMVVM.Repository {
         )
     }
 
-    override fun postConversationToServer(conversation: NetworkConversation, taskFinished: (Conversation) -> Unit) {
+    override fun postConversationToServer(conversation: NetworkConversation, taskFinished: (Conversation?) -> Unit) {
         conversationService.postConversation(conversation).enqueue(object : Callback<Conversation> {
             override fun onFailure(call: Call<Conversation>, t: Throwable) {
                 Log.i(LOG_TAG, "Error while posting conversation to server...")
                 t.printStackTrace()
-                taskFinished(Conversation())
+                taskFinished(null)
             }
 
             override fun onResponse(call: Call<Conversation>, response: Response<Conversation>) {

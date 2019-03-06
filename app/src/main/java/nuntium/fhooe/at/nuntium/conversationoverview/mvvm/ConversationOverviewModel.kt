@@ -20,19 +20,19 @@ class ConversationOverviewModel(val viewModel: ConversationOverviewMVVM.ViewMode
     private val networkDataLoader: NetworkDataLoader = NetworkDataLoader(disposables, viewModel.userParticipantId)
 
 
-    override fun onConversationsReceived(conversations: List<Conversation>){
+    override fun onConversationsReceived(conversations: List<Conversation>) {
         val conversationItemList = mutableListOf<ConversationItem>()
-        val disposable = Completable.fromAction{
+        val disposable = Completable.fromAction {
             conversations.forEach {
-                DatabaseCreator.database.messageDaoAccess().getLastMessageFromConversationById(it.id)?.let {message->
+                DatabaseCreator.database.messageDaoAccess().getLastMessageFromConversationById(it.id)?.let { message ->
                     val senderId = message.senderId
                     val receiverId = message.receiverId
                     val userId = viewModel.userParticipantId
                     // check if the partner is the sender or receiver id, leave if it is none
                     var partnerId = senderId
                     if (receiverId != userId && senderId != userId)
-                       return@let
-                    if (senderId == userId){
+                        return@let
+                    if (senderId == userId) {
                         partnerId = receiverId
                     }
                     val participant = DatabaseCreator.database.participantDaoAccess().getParticipantDirectlyById(partnerId)
@@ -42,14 +42,14 @@ class ConversationOverviewModel(val viewModel: ConversationOverviewMVVM.ViewMode
         }
             .subscribeOn(Schedulers.io())
             .subscribe {
-                conversationItemList.forEach {item ->
+                conversationItemList.forEach { item ->
                     Log.i(LOG_TAG, "${item.conversation.topic} ; ${item.conversationPartner.email} ; ${item.lastMessage.content} ")
                     viewModel.addConversationToView(item)
                 }
             }
     }
 
-    fun loadAllConversationsFromDatabase(){
+    fun loadAllConversationsFromDatabase() {
         disposables.add(
             Observable.just(
                 DatabaseCreator.database.conversationDaoAccess().getAllConversations()
@@ -68,11 +68,13 @@ class ConversationOverviewModel(val viewModel: ConversationOverviewMVVM.ViewMode
     }
 
     override fun loadAllConversationsForUser() {
-        Observable.create<Unit> {
+        disposables.add(Observable.create<Unit> {
             Schedulers.newThread().schedulePeriodicallyDirect({
                 networkDataLoader.fetchAllData()
-            },0,2000, TimeUnit.MILLISECONDS)
-        }.subscribe()
+            }, 0, 2000, TimeUnit.MILLISECONDS)
+        }.subscribe {
+            viewModel.updateFetchPreference()
+        })
 
         loadAllConversationsFromDatabase()
     }

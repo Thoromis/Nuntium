@@ -9,6 +9,7 @@ interface ConversationOverviewMVVM {
         fun setConversationsInRecyclerView(conversations: ArrayList<ConversationItem>)
         fun addConversationItem(item: ConversationItem)
         fun startConversationObservation()
+        fun updateFetchPreference()
     }
 
     interface Model {
@@ -24,5 +25,6 @@ interface ConversationOverviewMVVM {
         fun setConversationsOnView(conversations: ArrayList<ConversationItem>)
         fun onConversationsReceived(conversations: List<Conversation>)
         fun initializeConversationsRecyclerView(conversations: LiveData<List<Conversation>>)
+        fun updateFetchPreference()
     }
 }

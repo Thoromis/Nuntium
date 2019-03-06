@@ -13,6 +13,8 @@ class ConversationOverviewViewModel(val view: ConversationOverviewMVVM.View, val
     private val model: ConversationOverviewMVVM.Model = ConversationOverviewModel(this)
     override var livedataConversations: LiveData<List<Conversation>>? = null
 
+    override fun updateFetchPreference() = view.updateFetchPreference()
+
     override fun loadAllConversations(){
         model.loadAllConversationsForUser()
     }
