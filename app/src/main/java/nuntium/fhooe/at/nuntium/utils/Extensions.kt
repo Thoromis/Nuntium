@@ -13,7 +13,7 @@ import java.util.*
 import java.util.regex.Pattern
 
 fun View.shakeErrorView() {
-    if(!this.hasFocus()) this.backgroundTintList = ContextCompat.getColorStateList(this.context, R.color.colorAccent)
+    if (!this.hasFocus()) this.backgroundTintList = ContextCompat.getColorStateList(this.context, R.color.colorAccent)
     val initialX = this.x
     val animation = ObjectAnimator.ofFloat(this, "x", -20f + initialX, 20f + initialX).apply {
         duration = 150
@@ -30,12 +30,12 @@ fun View.shakeErrorView() {
     animation.start()
 
     this.setOnFocusChangeListener { view, hasFocus ->
-        if(hasFocus) view.backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.edittext_color)
+        if (hasFocus) view.backgroundTintList = ContextCompat.getColorStateList(view.context, R.color.edittext_color)
     }
 }
 
 fun String.isValidEmail(): Boolean {
-    val expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$"
+    val expression = "(?:[a-z0-9!#\$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#\$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])"//"^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$"
     return Pattern.compile(expression, Pattern.CASE_INSENSITIVE).matcher(this).matches()
 }
 

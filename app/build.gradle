@@ -54,6 +54,4 @@ dependencies {
         exclude group: "com.android.support"
     }
     kapt 'com.github.bumptech.glide:compiler:4.9.0'
-
-
 }
