@@ -14,6 +14,7 @@ class NewConversationModel(private val viewModel: NewConversationMVVM.ViewModel)
     private var disposable = Disposables.disposed()
     private var networkParticipants = mutableListOf<Participant>()
     private var selected: Participant? = null
+    private var lastRecyclerViewCreation = mutableListOf<Participant>()
 
     init {
         repository = NewConversationRepository()
@@ -37,11 +38,21 @@ class NewConversationModel(private val viewModel: NewConversationMVVM.ViewModel)
     }
 
     override fun recyclerViewDataChanged(participants: List<Participant>) {
+        var newData = false
+        participants.forEach { participant ->
+            if (!lastRecyclerViewCreation.map { it.id }.contains(participant.id)) {
+                lastRecyclerViewCreation = participants.toMutableList()
+                newData = true
+            }
+        }
+        if(lastRecyclerViewCreation.count() == 0) newData = true
+        if(!newData) return
+
         when {
             !networkParticipants.isEmpty() -> {
-                val toDelete = participants.filter { !networkParticipants.contains(it) }
+                val toDelete = participants.filter { !networkParticipants.contains(it) }.filter { it.id != viewModel.getCurrentParticipant() }
                 repository.deleteParticipantsFromDatabase(toDelete)
-                viewModel.updateRecyclerView(participants.filter { networkParticipants.contains(it) })
+                viewModel.updateRecyclerView(participants.filter { networkParticipants.contains(it) }.filter { it.id != viewModel.getCurrentParticipant() })
             }
             networkParticipants.isEmpty() -> viewModel.updateRecyclerView(participants)
         }

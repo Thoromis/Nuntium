@@ -1,6 +1,10 @@
 package nuntium.fhooe.at.nuntium.conversationoverview.mvvm
 
+import android.app.job.JobInfo
+import android.app.job.JobScheduler
 import android.arch.lifecycle.Observer
+import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.Snackbar
@@ -16,12 +20,14 @@ import nuntium.fhooe.at.nuntium.R
 import nuntium.fhooe.at.nuntium.addparticipant.mvvm.AddParticipantView
 import nuntium.fhooe.at.nuntium.conversationoverview.ConversationItem
 import nuntium.fhooe.at.nuntium.conversationoverview.ConversationsAdapter
+import nuntium.fhooe.at.nuntium.messagepolling.MessagePollingService
 import nuntium.fhooe.at.nuntium.newconversation.mvvm.NewConversationView
 import nuntium.fhooe.at.nuntium.room.conversation.Conversation
 import nuntium.fhooe.at.nuntium.room.message.Message
 import nuntium.fhooe.at.nuntium.room.participant.Participant
 import nuntium.fhooe.at.nuntium.utils.Constants
 import nuntium.fhooe.at.nuntium.utils.NuntiumPreferences
+import nuntium.fhooe.at.nuntium.utils.parseString
 import nuntium.fhooe.at.nuntium.viewconversation.mvvm.ViewConversationRepository
 import nuntium.fhooe.at.nuntium.viewconversation.mvvm.ViewConversationView
 import java.util.*
@@ -30,18 +36,15 @@ import java.util.*
 class ConversationOverviewView : AppCompatActivity(),
     ConversationOverviewMVVM.View {
     private lateinit var viewModel: ConversationOverviewViewModel
-    lateinit var  conversationsAdapter: ConversationsAdapter
+    lateinit var conversationsAdapter: ConversationsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        when {
-            intent.getBooleanExtra("EXIT", false) -> finish()
-            NuntiumPreferences.getParticipantId(applicationContext) == -1 -> startAddParticipant()
-            else -> Toast.makeText(this, "You are logged in as ${NuntiumPreferences.getParticipantName(applicationContext)}...", Toast.LENGTH_LONG).show()
-        }
+        startJobScheduler()
+        checkExtras()
 
         viewModel = ConversationOverviewViewModel(this, this.applicationContext)
 
@@ -50,10 +53,10 @@ class ConversationOverviewView : AppCompatActivity(),
         conversationsView.layoutManager = LinearLayoutManager(this)
         conversationsView.setHasFixedSize(true)
 
-        conversationsAdapter = ConversationsAdapter{
+        conversationsAdapter = ConversationsAdapter {
             val intent = Intent(applicationContext, ViewConversationView::class.java)
-            intent.putExtra("receiver",it.conversationPartner)
-            intent.putExtra("conversation",it.conversation)
+            intent.putExtra("receiver", it.conversationPartner)
+            intent.putExtra("conversation", it.conversation)
             startActivity(intent)
         }
 
@@ -62,8 +65,6 @@ class ConversationOverviewView : AppCompatActivity(),
 
 
         fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
             val intent = Intent(this, NewConversationView::class.java)
             startActivity(intent)
         }
@@ -71,10 +72,11 @@ class ConversationOverviewView : AppCompatActivity(),
         //repoTest()
     }
 
-    override fun setConversationsInRecyclerView(conversations: ArrayList<ConversationItem>){
+    override fun setConversationsInRecyclerView(conversations: ArrayList<ConversationItem>) {
         conversationsAdapter.conversationList = conversations
     }
-    override fun addConversationItem(item: ConversationItem){
+
+    override fun addConversationItem(item: ConversationItem) {
         conversationsAdapter.addNewConversationItem(item)
     }
 
@@ -92,6 +94,27 @@ class ConversationOverviewView : AppCompatActivity(),
         }
     }
 
+    private fun checkExtras() {
+        if (intent.getBooleanExtra("EXIT", false)) finish()
+        else if (NuntiumPreferences.getParticipantId(applicationContext) == -1) startAddParticipant()
+        else Toast.makeText(this, "You are logged in as ${NuntiumPreferences.getParticipantName(applicationContext)}...", Toast.LENGTH_LONG).show()
+
+        if (intent.getBooleanExtra(MessagePollingService.UPDATE_FETCH_PREFERENCE, false)) {
+            NuntiumPreferences.updateLastFetchDate(applicationContext, Date().parseString())
+        }
+    }
+
+    private fun startJobScheduler() {
+        val jobScheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
+        jobScheduler.schedule(
+            JobInfo.Builder(
+                MessagePollingService.MESSAGE_POLLING_JOB_ID, ComponentName(this, MessagePollingService::class.java)
+            )
+                .setMinimumLatency(30000)
+                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                .build()
+        )
+    }
 
     private fun repoTest() {
         /*

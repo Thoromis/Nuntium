@@ -9,8 +9,6 @@ import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import nuntium.fhooe.at.nuntium.R
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.*
 import java.util.regex.Pattern
 
@@ -48,8 +46,13 @@ fun Date.parseString(): String {
 
 fun String.parseDate(): Date? {
     //2019-03-04T12:18:28.967Z
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(this)
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && this != "") {
+        try {
+            SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(this)
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+            null
+        }
     } else {
         null
     }

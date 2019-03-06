@@ -94,5 +94,6 @@ class AddParticipantView : AppCompatActivity(), AddParticipantMVVM.View {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         intent.putExtra("EXIT", true)
         startActivity(intent)
+        finish()
     }
 }

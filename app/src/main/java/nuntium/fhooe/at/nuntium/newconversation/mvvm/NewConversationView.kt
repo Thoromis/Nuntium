@@ -43,7 +43,7 @@ class NewConversationView : NewConversationMVVM.View, AppCompatActivity() {
         viewModel?.startUpFinished()
     }
 
-    override fun getCurrentParticipant() : Int {
+    override fun getCurrentParticipant(): Int {
         return NuntiumPreferences.getParticipantId(this)
     }
 
@@ -77,6 +77,7 @@ class NewConversationView : NewConversationMVVM.View, AppCompatActivity() {
         intent.putExtra("receiver", other)
         intent.putExtra("conversation", conversation)
         startActivity(intent)
+        finish()
     }
 
     override fun initializeRecyclerView(participants: List<Participant>) {

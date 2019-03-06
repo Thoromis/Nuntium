@@ -15,11 +15,9 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import nuntium.fhooe.at.nuntium.R
-import nuntium.fhooe.at.nuntium.R.id.message
 import nuntium.fhooe.at.nuntium.conversationoverview.mvvm.ConversationOverviewView
 import nuntium.fhooe.at.nuntium.networking.ConversationsServiceFactory
 import nuntium.fhooe.at.nuntium.networking.MessagesServiceFactory
-import nuntium.fhooe.at.nuntium.networking.ParticipantServiceFactory
 import nuntium.fhooe.at.nuntium.room.DatabaseCreator
 import nuntium.fhooe.at.nuntium.room.conversation.Conversation
 import nuntium.fhooe.at.nuntium.room.message.Message
@@ -33,8 +31,9 @@ import retrofit2.Response
 //To be done for preferences:
 //After each message fetching, the preferences for the fetching time get reset to this time
 class MessagePollingService : JobService() {
-    val messageFactory = MessagesServiceFactory.build()
-    val conversationFactory = ConversationsServiceFactory.build()
+    private val messageFactory = MessagesServiceFactory.build()
+    private val conversationFactory = ConversationsServiceFactory.build()
+    private val conversations = mutableListOf<Conversation>()
 
     override fun onStopJob(p0: JobParameters?): Boolean {
         //Handle errors here, and return true for rescheduling
@@ -43,7 +42,7 @@ class MessagePollingService : JobService() {
     }
 
     override fun onStartJob(params: JobParameters?): Boolean {
-        startMessageFetching(params)
+        fetchMessageOnPage(params, 0)
         Log.i(LOG_TAG, "Executing job for message fetching now!")
         return false
     }
@@ -84,7 +83,7 @@ class MessagePollingService : JobService() {
     }
 
     private fun fetchMessageOnPage(params: JobParameters?, nextPage: Int) {
-        messageFactory.getMessagesOnPage(nextPage, 20).enqueue(object : Callback<List<Message>> {
+        messageFactory.getMessagesOnPageForParticipant(nextPage, 20, NuntiumPreferences.getParticipantId(this)).enqueue(object : Callback<List<Message>> {
             override fun onFailure(call: Call<List<Message>>, t: Throwable) {
                 Log.i(LOG_TAG, "Job scheduler failed during message fetching on page $nextPage, probably no internet connection...")
                 t.printStackTrace()
@@ -104,6 +103,7 @@ class MessagePollingService : JobService() {
                     insertMessagesIntoDb(filteredMessages)
 
                     //showNotification(filteredMessages, )
+                    fetchConversationsOnPage(params, filteredMessages, 0)
 
                     if (it.count() == 20) {
                         fetchMessageOnPage(params, nextPage + 1)
@@ -119,7 +119,7 @@ class MessagePollingService : JobService() {
 
         })
     }
-    
+
     private fun startMessageFetching(params: JobParameters?) {
         Observable.just(
             messageFactory.getMessageAfterDate(NuntiumPreferences.getParticipantId(this)).enqueue(object :
@@ -141,11 +141,9 @@ class MessagePollingService : JobService() {
                     response.body()?.let {
                         val filteredMessages = filterMessages(it)
                         insertMessagesIntoDb(filteredMessages)
+
                         //Show notification
                         //to be done
-
-                        //showNotification(filteredMessages.sortedBy { it.senderId })
-
                         fetchConversationsOnPage(params, filteredMessages, 0)
 
                         if (it.count() == 20) {
@@ -182,10 +180,7 @@ class MessagePollingService : JobService() {
 
         Log.i(LOG_TAG, "Fetched ${messages.count()} messages in job!")
 
-        val messagesAfterDate =
-            messages.filter { message -> filter(message) }
-
-        return messagesAfterDate
+        return messages.filter { message -> filter(message) }
     }
 
     private fun rescheduleService() {
@@ -201,7 +196,11 @@ class MessagePollingService : JobService() {
         )
     }
 
-    private fun showNotification(messages: List<Message>, conversations: List<Conversation>) {
+    private fun showNotification(messages: List<Message>, convs: List<Conversation>) {
+        conversations.addAll(convs)
+        conversations.distinctBy { it.id }
+        if(conversations.count() == 0) return
+
         Log.i(LOG_TAG, "Fetched ${messages.count()} messages for notification (after last fetch date) in job!")
         if (messages.count() == 0) return
 
@@ -216,15 +215,20 @@ class MessagePollingService : JobService() {
                         PendingIntent.getActivity(this, 0, notificationIntent, 0)
                     }
 
+            val messageString = if (messages.count() <= 1) "message" else "messages"
+            val conversationCount = conversations.map { it.id }.filter { messages.map { it.conversationId }.contains(it) }.count()
+            val conversationText = if(conversationCount <= 1) "conversation" else "conversations"
+            val contentText = "${messages.count()} new messages in $conversationCount $conversationText..."
+
             val inboxStyle = Notification.InboxStyle()
-            inboxStyle.setSummaryText("${messages.count()} new messages in Nuntium")
-            messages.forEach {
-                inboxStyle.addLine("Message from ${it.senderId}: ${it.content}")
+            inboxStyle.setSummaryText("${messages.count()} new $messageString in Nuntium")
+            messages.forEach {message ->
+                inboxStyle.addLine("Message in ${conversations.firstOrNull { it.id == message.conversationId}?.topic}: ${message.content}")
             }
 
             val notification: Notification = Notification.Builder(this, channel.id)
                 .setContentTitle("${messages.count()} new messages in Nuntium")
-                .setContentText("${messages[0].content}")
+                .setContentText(contentText)
                 .setContentIntent(pendingIntent)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setChannelId(CHANNEL_ID)
@@ -237,7 +241,6 @@ class MessagePollingService : JobService() {
             notificationManager.createNotificationChannel(channel)
             notificationManager.notify(NOTIFICATION_ID, notification)
         }
-
     }
 
     companion object {

@@ -32,10 +32,9 @@ class ParticipantAdapter(
             participant_item_tv_fullname.text = "${participant.firstName} ${participant.lastName}"
             participant_item_tv_email.text = participant.email
             Glide.with(context)
-                .load(participant.avatar+ "?set=set4")
+                .load(participant.avatar + "?set=set4")
                 .placeholder(ContextCompat.getDrawable(context, R.color.white))
                 .into(participant_item_iv_avatar)
-                .apply { RequestOptions.circleCropTransform() }
         }
 
         when {
