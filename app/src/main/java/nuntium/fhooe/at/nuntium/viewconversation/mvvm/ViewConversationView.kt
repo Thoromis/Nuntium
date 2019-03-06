@@ -1,9 +1,9 @@
 package nuntium.fhooe.at.nuntium.viewconversation.mvvm
 
-import android.graphics.Bitmap
+import android.graphics.*
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.support.v4.content.ContextCompat
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -12,8 +12,10 @@ import android.view.MenuItem
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.BitmapImageViewTarget
 import kotlinx.android.synthetic.main.activity_view_conversation_view.*
 import nuntium.fhooe.at.nuntium.R
 import nuntium.fhooe.at.nuntium.room.conversation.Conversation
@@ -54,7 +56,8 @@ class ViewConversationView : AppCompatActivity(),ViewConversationMVVM.View {
             conversation as Conversation,NuntiumPreferences.getParticipantId(this))
 
         initViews(conversation.topic,"${participant.firstName} ${participant.lastName}")
-        setImageWithGlide(participant)
+
+        view_conversation_toolbar_imageview.circleImage(participant.avatar + "?set=set4",2f)
     }
 
     private fun initViews(topic: String,name: String) {
@@ -125,13 +128,46 @@ class ViewConversationView : AppCompatActivity(),ViewConversationMVVM.View {
         return true
     }
 
-    private fun setImageWithGlide(participant: Participant) {
-
-        Glide.with(applicationContext)
-            .asDrawable()
-            .load(participant.avatar)
+    private fun <T> ImageView.circleImage(uri: T, borderSize: Float) {
+        Glide.with(context)
+            .asBitmap()
+            .load(uri)
             .apply(RequestOptions.circleCropTransform())
-            .placeholder(ContextCompat.getDrawable(applicationContext, R.color.white))
-            .into(view_conversation_toolbar_imageview)
+            .into(object : BitmapImageViewTarget(this) {
+                override fun setResource(resource: Bitmap?) {
+                    val circularBitmapDrawable = RoundedBitmapDrawableFactory.create(
+                        context.resources,
+                        if (borderSize > 0) {
+                            resource?.addBorder(borderSize)
+                        } else {
+                            resource
+                        }
+                    )
+                    circularBitmapDrawable.isCircular = true
+                    setImageDrawable(circularBitmapDrawable)
+                }
+            })
+    }
+
+    private fun Bitmap.addBorder(borderSize: Float): Bitmap {
+        val borderOffset = (borderSize * 2).toInt()
+        val radius = Math.min(height / 2, width / 2).toFloat()
+        val output = Bitmap.createBitmap(width + borderOffset, height + borderOffset, Bitmap.Config.ARGB_8888)
+        val paint = Paint()
+        val borderX = width / 2 + borderSize
+        val borderY = height / 2 + borderSize
+        val canvas = Canvas(output)
+        paint.isAntiAlias = true
+        canvas.drawARGB(0, 0, 0, 0)
+        paint.style = Paint.Style.FILL
+        canvas.drawCircle(borderX, borderY, radius, paint)
+        paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
+        canvas.drawBitmap(this, borderSize, borderSize, paint)
+        paint.xfermode = null
+        paint.style = Paint.Style.STROKE
+        paint.color = Color.WHITE
+        paint.strokeWidth = borderSize
+        canvas.drawCircle(borderX, borderY, radius, paint)
+        return output
     }
 }

@@ -38,7 +38,7 @@ class ConversationsAdapter(val startConversation: (data: ConversationItem) -> Un
 
         Glide
             .with(holder.imageViewConversationAvatar.context)
-            .load(currentConversationItem.conversationPartner.avatar)
+            .load(currentConversationItem.conversationPartner.avatar+ "?set=set4")
             .into(holder.imageViewConversationAvatar)
 
         holder.itemView.setOnClickListener {

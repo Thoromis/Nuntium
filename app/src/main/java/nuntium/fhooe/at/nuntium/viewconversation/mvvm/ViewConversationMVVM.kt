@@ -1,6 +1,7 @@
 package nuntium.fhooe.at.nuntium.viewconversation.mvvm
 
 import android.arch.lifecycle.LiveData
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable
 import nuntium.fhooe.at.nuntium.networking.entity.NetworkMessage
 import nuntium.fhooe.at.nuntium.room.conversation.Conversation
 import nuntium.fhooe.at.nuntium.room.message.Message
