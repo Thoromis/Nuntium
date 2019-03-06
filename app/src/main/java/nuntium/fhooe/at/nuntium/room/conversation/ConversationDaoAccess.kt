@@ -12,7 +12,7 @@ interface ConversationDaoAccess {
     @Query("SELECT * FROM Conversation WHERE id= :conversationId")
     fun getConversationById(conversationId: Int): LiveData<Conversation>
 
-    @Query("SELECT * FROM Conversation")
+    @Query("SELECT * FROM Conversation ORDER BY creationDate ASC")
     fun getAllConversations(): LiveData<List<Conversation>>
 
     @Update
