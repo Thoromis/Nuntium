@@ -9,13 +9,16 @@ import android.app.job.JobService
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Build
 import android.support.v4.app.ActivityManagerCompat
+import android.support.v4.content.ContextCompat
 import android.util.Log
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import nuntium.fhooe.at.nuntium.R
+import nuntium.fhooe.at.nuntium.R.mipmap.ic_launcher_nuntium_round
 import nuntium.fhooe.at.nuntium.conversationoverview.mvvm.ConversationOverviewView
 import nuntium.fhooe.at.nuntium.networking.ConversationsServiceFactory
 import nuntium.fhooe.at.nuntium.networking.MessagesServiceFactory
@@ -192,18 +195,18 @@ class MessagePollingService : JobService() {
         )
     }
 
-    private fun isAppInForeground() : Boolean {
+    private fun isAppInForeground(): Boolean {
         val activityManager = this.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         val runningAppProcesses = activityManager.runningAppProcesses ?: return false
         return runningAppProcesses.any { it.processName == this.packageName && it.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND }
     }
 
     private fun showNotification(messages: List<Message>, convs: List<Conversation>) {
-        if(isAppInForeground()) return
+        if (isAppInForeground()) return
 
         conversations.addAll(convs)
         conversations.distinctBy { it.id }
-        if(conversations.count() == 0) return
+        if (conversations.count() == 0) return
 
         Log.i(LOG_TAG, "Fetched ${messages.count()} messages for notification (after last fetch date) in job!")
         if (messages.count() == 0) return
@@ -221,13 +224,13 @@ class MessagePollingService : JobService() {
 
             val messageString = if (messages.count() <= 1) "message" else "messages"
             val conversationCount = conversations.map { it.id }.filter { messages.map { it.conversationId }.contains(it) }.count()
-            val conversationText = if(conversationCount <= 1) "conversation" else "conversations"
+            val conversationText = if (conversationCount <= 1) "conversation" else "conversations"
             val contentText = "${messages.count()} new messages in $conversationCount $conversationText..."
 
             val inboxStyle = Notification.InboxStyle()
             inboxStyle.setSummaryText("${messages.count()} new $messageString in Nuntium")
-            messages.forEach {message ->
-                inboxStyle.addLine("Message in ${conversations.firstOrNull { it.id == message.conversationId}?.topic}: ${message.content}")
+            messages.forEach { message ->
+                inboxStyle.addLine("Message in ${conversations.firstOrNull { it.id == message.conversationId }?.topic}: ${message.content}")
             }
 
             val notification: Notification = Notification.Builder(this, channel.id)
@@ -235,8 +238,10 @@ class MessagePollingService : JobService() {
                 .setContentText(contentText)
                 .setContentIntent(pendingIntent)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setLargeIcon(BitmapFactory.decodeResource(this.resources, R.mipmap.ic_launcher_foreground))
                 .setChannelId(CHANNEL_ID)
                 .setStyle(inboxStyle)
+                .setOnlyAlertOnce(true)
                 .build()
 
             // Register the channel with the system; you can't change the importance
