@@ -1,7 +1,11 @@
 package nuntium.fhooe.at.nuntium.conversationoverview
 
+import android.arch.lifecycle.LiveData
+import android.arch.lifecycle.Observer
 import android.util.Log
 import io.reactivex.Completable
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import nuntium.fhooe.at.nuntium.networking.ConversationsServiceFactory
@@ -27,7 +31,7 @@ class NetworkDataLoader(private val disposables: CompositeDisposable, private va
     private var networkConversations = mutableListOf<Conversation>()
 
 
-    fun fetchAllData(){
+    fun fetchAllData() {
         // fetch Conversations
         fetchAllConversationsFromNetwork()
         // fetch Participants
@@ -59,7 +63,6 @@ class NetworkDataLoader(private val disposables: CompositeDisposable, private va
         when {
             !conversations.isEmpty() -> {
                 networkConversations.addAll(conversations)
-                updateConversationsInDatabase(conversations)
             }
             else -> {
                 //Tell user data is local via Viewmodel
@@ -74,9 +77,37 @@ class NetworkDataLoader(private val disposables: CompositeDisposable, private va
         } else {
             // finished fetching data and updated
             // check if something is to delete in the database
-
+            syncConversationsWithDatabase()
         }
     }
+
+    private fun syncConversationsWithDatabase() {
+        //disposables.add(
+        //    Observable.just(
+        //        DatabaseCreator.database.conversationDaoAccess().getAllConversations()
+        //    )
+        //        .subscribeOn(Schedulers.io())
+        //        .observeOn(AndroidSchedulers.mainThread())
+        //        .subscribe({
+        //            it.value?.let { databaseConversations ->
+        //                val toDelete = databaseConversations.filter { conversation ->
+        //                    networkConversations.map { networkConversation -> networkConversation.id }
+        //                        .contains(conversation.id)
+        //                }
+        //                Completable.fromAction {
+        //                    toDelete.forEach { toDelete ->
+        //                        DatabaseCreator.database.conversationDaoAccess().deleteConversation(toDelete)
+        //                    }
+        //                }
+        //                    .subscribeOn(Schedulers.io())
+        //                    .subscribe()
+        //            }
+        //        }, {
+        //            it.printStackTrace()
+        //        })
+        //)
+    }
+
 
 
     private fun fetchConversationsFromPage(nextPage: Int) {
@@ -132,7 +163,7 @@ class NetworkDataLoader(private val disposables: CompositeDisposable, private va
         when {
             !participants.isEmpty() -> {
                 updateParticipantsInDatabase(participants)
-                updateParticipantsInDatabase(participants.filter { it.id != userId})
+                updateParticipantsInDatabase(participants.filter { it.id != userId })
             }
             else -> {
                 //Tell user data is local via Viewmodel
@@ -144,6 +175,7 @@ class NetworkDataLoader(private val disposables: CompositeDisposable, private va
         //Fetch participants from next page if needed
         if (nextPage != -1) fetchParticipantsFromPage(nextPage)
     }
+
     private fun fetchParticipantsFromPage(nextPage: Int) {
         Log.i(Constants.LOG_TAG_NETWORK_LOADER, "Fetching participants from page $nextPage")
 
