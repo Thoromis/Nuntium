@@ -81,5 +81,4 @@ class ViewConversationModel(private val viewModel: ViewConversationMVVM.ViewMode
             }
         }
     }
-
 }

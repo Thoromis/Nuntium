@@ -13,7 +13,7 @@ import nuntium.fhooe.at.nuntium.room.DatabaseCreator
 import nuntium.fhooe.at.nuntium.utils.Constants.LOG_TAG
 import java.util.concurrent.TimeUnit
 
-class ConversationOverviewModel(val viewModel: ConversationOverviewViewModel) :
+class ConversationOverviewModel(val viewModel: ConversationOverviewMVVM.ViewModel) :
     ConversationOverviewMVVM.Model {
 
     private val disposables: CompositeDisposable = CompositeDisposable()

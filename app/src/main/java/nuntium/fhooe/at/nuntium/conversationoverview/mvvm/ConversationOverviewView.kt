@@ -29,7 +29,7 @@ import java.util.*
 
 class ConversationOverviewView : AppCompatActivity(),
     ConversationOverviewMVVM.View {
-    private lateinit var viewModel: ConversationOverviewViewModel
+    private lateinit var viewModel: ConversationOverviewMVVM.ViewModel
     lateinit var  conversationsAdapter: ConversationsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,7 +78,7 @@ class ConversationOverviewView : AppCompatActivity(),
         conversationsAdapter.addNewConversationItem(item)
     }
 
-    fun startConversationObservation() {
+    override fun startConversationObservation() {
         Log.i(Constants.LOG_TAG, "Conversations livedata is now observed in the view!")
 
         viewModel?.livedataConversations?.let { liveConversationsData ->
@@ -92,63 +92,6 @@ class ConversationOverviewView : AppCompatActivity(),
         }
     }
 
-
-    private fun repoTest() {
-        /*
-        val repo = ViewConversationRepository()
-
-        //two participants
-        val part1 = Participant(1, "Franz", "Xaver", "mail@from.xaver", "")
-        val part2 = Participant(2, "Josef", "Huber", "huber@mail.what", "")
-
-        //a conversation
-        val conversation = Conversation(1, "Topicic", Date())
-
-        //some messages
-        val messageList = listOf(
-            Message( "Hallo Xaver", 1, 2, 1, 30, Date()),
-            Message( "Hallo Franz!", 1, 1, 2, 31, Date()),
-            Message( "Wie geht es dir?", 1, 2, 1, 32, Date()),
-            Message( "Ganz gut. Lass mich in Ruhe!", 1, 1, 2, 33, Date())
-        )
-        val messageListRepo = listOf(
-            Message( "Hallo Xaver", 1, 2, 1, 34, Date()),
-            Message( "Hallo Franz!", 1, 1, 2, 35, Date()),
-            Message( "Wie geht es dir?", 1, 2, 1, 36, Date()),
-            Message( "Ganz gut. Lass mich in Ruhe!", 1, 1, 2, 37, Date())
-        )
-
-        //Insertion
-
-        repo.fetchAllMessagesFromDatabase(1).observe(this, object : Observer<List<Message>> {
-            override fun onChanged(messages: List<Message>?) {
-                messages?.forEach { message ->
-                    Log.i("MESSAGE", message.content)
-                }
-                if(messages == null) Log.i("MESSAGE_LOG", "onChanged entered, but no messages received!")
-            }
-        })
-        messageListRepo.forEach { message ->
-            repo.insertMessageToDatabase(message)
-        }
-        */
-        //Completable.fromAction {
-        //    with(DatabaseCreator.database) {
-        //        participantDaoAccess().insertParticipant(part1)
-        //        participantDaoAccess().insertParticipant(part2)
-//
-        //        conversationDaoAccess().insertConversation(conversation)
-//
-        //        messageDaoAccess().insertMessages(messageList)
-        //        messageListRepo.forEach { message ->
-        //            repo.insertMessageToDatabase(message)
-        //        }
-        //        Constants.i("LOG_TAG", "Insertion of objects is finished...")
-        //    }
-        //}
-        //.subscribeOn(Schedulers.computation())
-        //.subscribe()
-    }
 
     private fun startAddParticipant() {
         val intent = Intent(this, AddParticipantView::class.java)

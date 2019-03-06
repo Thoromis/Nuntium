@@ -8,10 +8,10 @@ import nuntium.fhooe.at.nuntium.room.message.Message
 import nuntium.fhooe.at.nuntium.room.participant.Participant
 import nuntium.fhooe.at.nuntium.utils.NuntiumPreferences
 
-class ConversationOverviewViewModel(val view: ConversationOverviewView, val context: Context) : ConversationOverviewMVVM.ViewModel {
-    val userParticipantId = NuntiumPreferences.getParticipantId(context)
+class ConversationOverviewViewModel(val view: ConversationOverviewMVVM.View, val context: Context) : ConversationOverviewMVVM.ViewModel {
+    override val userParticipantId = NuntiumPreferences.getParticipantId(context)
     private val model: ConversationOverviewMVVM.Model = ConversationOverviewModel(this)
-    var livedataConversations: LiveData<List<Conversation>>? = null
+    override var livedataConversations: LiveData<List<Conversation>>? = null
 
     override fun loadAllConversations(){
         model.loadAllConversationsForUser()
@@ -30,7 +30,7 @@ class ConversationOverviewViewModel(val view: ConversationOverviewView, val cont
     }
 
 
-    fun initializeConversationsRecyclerView(conversations: LiveData<List<Conversation>>){
+    override fun initializeConversationsRecyclerView(conversations: LiveData<List<Conversation>>){
         livedataConversations = conversations
         view.startConversationObservation()
     }
