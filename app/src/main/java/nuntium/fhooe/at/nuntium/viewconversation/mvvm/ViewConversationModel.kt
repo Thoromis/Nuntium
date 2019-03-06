@@ -35,6 +35,7 @@ class ViewConversationModel(private val viewModel: ViewConversationMVVM.ViewMode
     }
 
     override fun recyclerViewDataChanged(messages: List<Message>) {
+        /*
         when {
             !networkMessages.isEmpty() -> {
                 val toDelete = messages.filter{!networkMessages.contains(it) }
@@ -43,6 +44,8 @@ class ViewConversationModel(private val viewModel: ViewConversationMVVM.ViewMode
             }
             networkMessages.isEmpty() -> viewModel.updateRecyclerView(messages)
         }
+        */
+        viewModel.updateRecyclerView(messages)
     }
 
     private fun messageNetworkFetchingFinished(messages: List<Message>, nextPage: Int) {
@@ -58,11 +61,13 @@ class ViewConversationModel(private val viewModel: ViewConversationMVVM.ViewMode
 
         if (nextPage != -1) repository.fetchMessagesFromPage(nextPage) {
             parts, page -> messageNetworkFetchingFinished(parts,page)
+        } else {
+            repository.fetchAllMessagesFromDatabase (viewModel.conversation.id) {
+                messageDatabaseFetchingFinished(it)
+            }
         }
 
-        repository.fetchAllMessagesFromDatabase (viewModel.conversation.id) {
-           messageDatabaseFetchingFinished(it)
-        }
+
     }
 
     private fun messageDatabaseFetchingFinished(messages: LiveData<List<Message>>) {
@@ -72,7 +77,7 @@ class ViewConversationModel(private val viewModel: ViewConversationMVVM.ViewMode
     private fun sendingMessagesOverNetWorkFinished(message: Message?) {
         when {
             message != null -> {
-                networkMessages.add(message)
+                //networkMessages.add(message)
                 repository.addMessageToDatabase(message)
                 viewModel.setEditTextEmpty()
             }
