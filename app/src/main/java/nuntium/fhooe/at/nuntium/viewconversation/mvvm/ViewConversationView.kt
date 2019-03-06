@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.view.MenuItem
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
@@ -26,7 +27,7 @@ import nuntium.fhooe.at.nuntium.viewconversation.MessagesAdapter
 import java.util.*
 
 
-class ViewConversationView : AppCompatActivity(),ViewConversationMVVM.View {
+class ViewConversationView : AppCompatActivity(), ViewConversationMVVM.View {
 
 
     private var viewModel: ViewConversationMVVM.ViewModel? = null
@@ -35,6 +36,7 @@ class ViewConversationView : AppCompatActivity(),ViewConversationMVVM.View {
     private lateinit var btnSend: Button
     private lateinit var toolbar: Toolbar
     private lateinit var text: EditText
+    private var lastMsg: Message? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_conversation_view)
@@ -48,19 +50,21 @@ class ViewConversationView : AppCompatActivity(),ViewConversationMVVM.View {
         val participant = intent.getSerializableExtra("receiver")
         var conversation = intent.getSerializableExtra("conversation")
 
-        if(conversation == null) {
-            conversation = Conversation(1,"MoinMoin",Date(System.currentTimeMillis()))
+        if (conversation == null) {
+            conversation = Conversation(1, "MoinMoin", Date(System.currentTimeMillis()))
         }
 
-        viewModel = ViewConversationViewModel(this,participant as Participant,
-            conversation as Conversation,NuntiumPreferences.getParticipantId(this))
+        viewModel = ViewConversationViewModel(
+            this, participant as Participant,
+            conversation as Conversation, NuntiumPreferences.getParticipantId(this)
+        )
 
-        initViews(conversation.topic,"${participant.firstName} ${participant.lastName}")
+        initViews(conversation.topic, "${participant.firstName} ${participant.lastName}")
 
-        view_conversation_toolbar_imageview.circleImage(participant.avatar + "?set=set4",2f)
+        view_conversation_toolbar_imageview.circleImage(participant.avatar + "?set=set4", 2f)
     }
 
-    private fun initViews(topic: String,name: String) {
+    private fun initViews(topic: String, name: String) {
 
         rvMessages = findViewById(R.id.view_conversation_rcview)
         btnSend = findViewById(R.id.view_conversation_btn_send)
@@ -82,12 +86,13 @@ class ViewConversationView : AppCompatActivity(),ViewConversationMVVM.View {
 
 
     override fun initRecyclerView(messages: List<Message>) {
-
+        Log.i("TEST","DEAF NED SEI")
         val layoutManager = LinearLayoutManager(this)
         layoutManager.stackFromEnd = true
 
         rvMessages.layoutManager = layoutManager
-        rvAdapter = MessagesAdapter(applicationContext,messages.toMutableList(),NuntiumPreferences.getParticipantId(this))
+        rvAdapter =
+            MessagesAdapter(applicationContext, messages.toMutableList(), NuntiumPreferences.getParticipantId(this))
         rvMessages.adapter = rvAdapter
     }
 
@@ -98,28 +103,48 @@ class ViewConversationView : AppCompatActivity(),ViewConversationMVVM.View {
     override fun startMessagesObservation() {
         viewModel?.liveData?.let { liveMessageData ->
             liveMessageData.observe(this,
-                android.arch.lifecycle.Observer<List<Message>> {
-                    messages -> messages?.let {
-                    viewModel?.recyclerViewDataChanged(it)
-                }
+                android.arch.lifecycle.Observer<List<Message>> { messages ->
+                    messages?.let {
+                        viewModel?.recyclerViewDataChanged(it)
+                    }
                 })
         }
     }
 
     override fun updateRecyclerView(messages: List<Message>) {
-        rvAdapter.messages = messages.toMutableList()
-        rvAdapter.notifyDataSetChanged()
-        rvMessages.scrollToPosition(rvAdapter.itemCount - 1);
+        //Log.i("TEST","inupdateRecyclerView ${messages.size} ${lastMsg.toString()}")
+        var updateRequired = false
+        lastMsg?.let {
+            if(messages.isNotEmpty()) {
+                val newLastMsg = messages[messages.size - 1]
+                if (it != newLastMsg) {
+                    lastMsg = newLastMsg
+                    updateRequired = true
+                }
+            }
+        }
+        if (lastMsg == null && messages.isNotEmpty()) {
+            lastMsg = messages[messages.size - 1]
+            updateRequired = true
+        }
+        //Log.i("TEST","$updateRequired")
+        if (updateRequired) {
+            messages.forEach { Log.i("TEST",it.content) }
+            rvAdapter.messages = messages.toMutableList()
+            rvAdapter.notifyDataSetChanged()
+            if (messages.isNotEmpty())
+                rvMessages.scrollToPosition(rvAdapter.itemCount - 1)
+        }
     }
 
     override fun setEditTextEmpty() {
         text.setText("")
     }
 
-    override fun displayMessage(message: String) = Snackbar.make(btnSend,message,Snackbar.LENGTH_SHORT).show()
+    override fun displayMessage(message: String) = Snackbar.make(btnSend, message, Snackbar.LENGTH_SHORT).show()
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when(item?.itemId){
+        when (item?.itemId) {
             android.R.id.home -> {
                 finish()
             }
