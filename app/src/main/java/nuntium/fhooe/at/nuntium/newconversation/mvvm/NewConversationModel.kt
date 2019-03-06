@@ -45,8 +45,8 @@ class NewConversationModel(private val viewModel: NewConversationMVVM.ViewModel)
                 newData = true
             }
         }
-        if(lastRecyclerViewCreation.count() == 0) newData = true
-        if(!newData) return
+        if (lastRecyclerViewCreation.count() == 0) newData = true
+        if (!newData) return
 
         when {
             !networkParticipants.isEmpty() -> {
@@ -87,10 +87,10 @@ class NewConversationModel(private val viewModel: NewConversationMVVM.ViewModel)
         //Fetch participants from next page if needed
         if (nextPage != -1) repository.fetchParticipantsFromPage(nextPage) { parts, page ->
             participantNetworkFetchingFinished(parts, page)
-        }
-
-        repository.fetchAllParticipantsFromDatabase {
-            participantDatabaseFetchingFinished(it)
+        } else {
+            repository.fetchAllParticipantsFromDatabase {
+                participantDatabaseFetchingFinished(it)
+            }
         }
     }
 
