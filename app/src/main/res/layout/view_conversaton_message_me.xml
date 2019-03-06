@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                             android:layout_width="match_parent"
+                                             xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
                                              android:layout_height="wrap_content"
                                              xmlns:app="http://schemas.android.com/apk/res-auto"
-                                             android:layout_marginLeft="50dp"
+                                             android:layout_marginStart="50dp"
 >
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
               android:text="TextView" android:id="@+id/view_conversation_message"
@@ -12,9 +12,9 @@
               app:layout_constraintTop_toTopOf="parent"
               android:layout_margin="8dp"
               android:maxWidth="325dp"
-              android:typeface="monospace" android:textColor="@android:color/black"
+              android:textColor="@android:color/black"
               android:background="@drawable/message_background_me" android:gravity="start"
-              android:layout_gravity="right"/>
+              android:layout_gravity="right" tools:ignore="HardcodedText,RtlHardcoded"/>
 
     <TextView
             android:text="04:20"
@@ -22,5 +22,6 @@
             android:layout_marginEnd="4dp"
             app:layout_constraintBottom_toBottomOf="@id/view_conversation_message"
             app:layout_constraintEnd_toStartOf="@id/view_conversation_message"
-            android:layout_height="wrap_content" android:id="@+id/view_conversation_time" android:textSize="10sp"/>
+            android:layout_height="wrap_content" android:id="@+id/view_conversation_time" android:textSize="10sp"
+            tools:ignore="HardcodedText,SmallSp"/>
 </android.support.constraint.ConstraintLayout>
