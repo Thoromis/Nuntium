@@ -9,8 +9,8 @@ import java.util.concurrent.TimeUnit
 object ParticipantServiceFactory {
     fun build(): ParticipantService {
         val okHttpClient = OkHttpClient.Builder()
-            .readTimeout(500, TimeUnit.MILLISECONDS)
-            .connectTimeout(500, TimeUnit.MILLISECONDS)
+            .readTimeout(2000, TimeUnit.MILLISECONDS)
+            .connectTimeout(2000, TimeUnit.MILLISECONDS)
             .build()
 
         return Retrofit.Builder()
