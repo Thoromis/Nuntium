@@ -15,6 +15,9 @@ interface ParticipantDaoAccess {
     @Query("SELECT * FROM Participant WHERE id= :participantId")
     fun getParticipantById(participantId: Int): LiveData<Participant>
 
+    @Query("SELECT * FROM Participant WHERE id= :participantId")
+    fun getParticipantDirectlyById(participantId: Int): Participant
+
     @Update
     fun updateParticipant(participant: Participant)
 

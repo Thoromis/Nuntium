@@ -11,9 +11,25 @@
             android:theme="?attr/actionBarTheme"
             app:titleMarginStart="32dp"
             android:minHeight="?attr/actionBarSize" android:id="@+id/view_conversation_toolbar">
-        <ImageView android:layout_width="wrap_content" android:layout_height="match_parent"
-                   android:id="@+id/view_conversation_toolbar_imageview" android:foregroundGravity="right"
-                   android:adjustViewBounds="true"/>
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+        android:orientation="horizontal">
+            <ImageView
+                    android:id="@+id/view_conversation_toolbar_imageview"
+                    android:adjustViewBounds="true" android:foregroundGravity="left"
+                    android:layout_height="50dp" android:layout_width="50dp"/>
+            <TextView
+                    android:text="TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" android:id="@+id/view_conversation_toolbar_title"
+                    android:layout_weight="1" android:textSize="20sp" android:gravity="center"/>
+            <TextView
+                    android:text="TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" android:id="@+id/view_conversation_toolbar_participant"
+                    android:layout_weight="1" android:textSize="20sp" android:gravity="center"/>
+        </LinearLayout>
+
     </android.support.v7.widget.Toolbar>
 
 
