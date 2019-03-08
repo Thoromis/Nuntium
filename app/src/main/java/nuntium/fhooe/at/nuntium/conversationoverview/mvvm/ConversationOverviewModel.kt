@@ -3,13 +3,13 @@ package nuntium.fhooe.at.nuntium.conversationoverview.mvvm
 import android.util.Log
 import io.reactivex.Completable
 import io.reactivex.Observable
-import nuntium.fhooe.at.nuntium.conversationoverview.ConversationItem
-import nuntium.fhooe.at.nuntium.room.conversation.Conversation
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import nuntium.fhooe.at.nuntium.conversationoverview.ConversationItem
 import nuntium.fhooe.at.nuntium.conversationoverview.NetworkDataLoader
 import nuntium.fhooe.at.nuntium.room.DatabaseCreator
+import nuntium.fhooe.at.nuntium.room.conversation.Conversation
 import nuntium.fhooe.at.nuntium.utils.Constants.LOG_TAG
 import java.util.concurrent.TimeUnit
 
@@ -17,7 +17,7 @@ class ConversationOverviewModel(val viewModel: ConversationOverviewMVVM.ViewMode
     ConversationOverviewMVVM.Model {
 
     private val disposables: CompositeDisposable = CompositeDisposable()
-    private val networkDataLoader: NetworkDataLoader = NetworkDataLoader(disposables, viewModel.userParticipantId)
+    private val networkDataLoader: NetworkDataLoader = NetworkDataLoader(disposables, viewModel.userParticipantId) { viewModel.updateFetchPreference() }
 
 
     override fun onConversationsReceived(conversations: List<Conversation>) {
@@ -72,9 +72,7 @@ class ConversationOverviewModel(val viewModel: ConversationOverviewMVVM.ViewMode
             Schedulers.newThread().schedulePeriodicallyDirect({
                 networkDataLoader.fetchAllData()
             }, 0, 2000, TimeUnit.MILLISECONDS)
-        }.subscribe {
-            viewModel.updateFetchPreference()
-        })
+        }.subscribe())
 
         loadAllConversationsFromDatabase()
     }

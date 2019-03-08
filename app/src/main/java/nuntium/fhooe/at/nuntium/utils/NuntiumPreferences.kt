@@ -1,9 +1,13 @@
 package nuntium.fhooe.at.nuntium.utils
 
 import android.content.Context
+import android.util.Log
+import nuntium.fhooe.at.nuntium.modules.App
 import nuntium.fhooe.at.nuntium.room.participant.Participant
+import nuntium.fhooe.at.nuntium.utils.Constants.LOG_TAG
 
 class NuntiumPreferences {
+
     companion object {
         fun insertParticipant(context: Context, participant: Participant) {
             val sharedpreferences = context.getSharedPreferences(SHARED_PREF_KEY, Context.MODE_PRIVATE)
@@ -22,7 +26,7 @@ class NuntiumPreferences {
 
         fun updateLastFetchDate(context: Context, date: String) {
             val sharedPreferences = context.getSharedPreferences(SHARED_PREF_KEY, Context.MODE_PRIVATE)
-
+            Log.i(LOG_TAG, "Updated last fetch date to $date")
             sharedPreferences
                 .edit()
                 .putString(CREATION_DATE, date)

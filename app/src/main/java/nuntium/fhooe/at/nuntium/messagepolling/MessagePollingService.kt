@@ -13,6 +13,7 @@ import android.graphics.BitmapFactory
 import android.os.Build
 import android.support.v4.app.ActivityManagerCompat
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.ContextCompat.getSystemService
 import android.util.Log
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -27,6 +28,7 @@ import nuntium.fhooe.at.nuntium.room.conversation.Conversation
 import nuntium.fhooe.at.nuntium.room.message.Message
 import nuntium.fhooe.at.nuntium.utils.Constants.LOG_TAG
 import nuntium.fhooe.at.nuntium.utils.NuntiumPreferences
+import nuntium.fhooe.at.nuntium.utils.minusMilliseconds
 import nuntium.fhooe.at.nuntium.utils.parseDate
 import retrofit2.Call
 import retrofit2.Callback
@@ -119,49 +121,6 @@ class MessagePollingService : JobService() {
         })
     }
 
-    private fun startMessageFetching(params: JobParameters?) {
-        Observable.just(
-            messageFactory.getMessageAfterDate(NuntiumPreferences.getParticipantId(this)).enqueue(object :
-                Callback<List<Message>> {
-                override fun onFailure(call: Call<List<Message>>, t: Throwable) {
-                    Log.i(LOG_TAG, "Job scheduler failed during message fetching, probably no internet connection...")
-                    t.printStackTrace()
-                    rescheduleService()
-                    jobFinished(params, true)
-                }
-
-                override fun onResponse(call: Call<List<Message>>, response: Response<List<Message>>) {
-                    if (!response.isSuccessful) {
-                        Log.i(LOG_TAG, "Message fetching failed in Job Scheduler with code: ${response.code()} and message: ${response.message()}")
-                        rescheduleService()
-                        return
-                    }
-
-                    response.body()?.let {
-                        val filteredMessages = filterMessages(it)
-                        insertMessagesIntoDb(filteredMessages)
-
-                        //Show notification
-                        //to be done
-                        fetchConversationsOnPage(params, filteredMessages, 0)
-
-                        if (it.count() == 20) {
-                            fetchMessageOnPage(params, 1)
-                        } else {
-                            //Reschedule service
-                            rescheduleService()
-
-                            jobFinished(params, false)
-                        }
-                    }
-                }
-
-            })
-        )
-            .subscribeOn(Schedulers.io())
-            .subscribe()
-    }
-
     private fun insertMessagesIntoDb(messages: List<Message>) {
         Completable
             .fromAction { DatabaseCreator.database.messageDaoAccess().insertMessages(messages) }
@@ -170,10 +129,13 @@ class MessagePollingService : JobService() {
     }
 
     private fun filterMessages(messages: List<Message>): List<Message> {
-        val lastFetchDate = NuntiumPreferences.getLastFetchDate(this@MessagePollingService).parseDate()
+        val lastFetchDate = NuntiumPreferences.getLastFetchDate(this@MessagePollingService)
+            .parseDate()
+            ?.minusMilliseconds(3000) //3 seconds for slow internet
+            ?.minusMilliseconds(1000*60*60) //1h for server problem
         val filter: (Message) -> (Boolean) = {
             val otherDate = it.createdDate.parseDate()
-            if (otherDate != null && lastFetchDate != null) otherDate > lastFetchDate
+            if (otherDate != null && lastFetchDate != null) otherDate >= lastFetchDate
             else true
         }
 

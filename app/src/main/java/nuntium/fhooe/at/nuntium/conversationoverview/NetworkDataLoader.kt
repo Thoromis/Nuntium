@@ -1,11 +1,7 @@
 package nuntium.fhooe.at.nuntium.conversationoverview
 
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.Observer
 import android.util.Log
 import io.reactivex.Completable
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import nuntium.fhooe.at.nuntium.networking.ConversationsServiceFactory
@@ -16,12 +12,11 @@ import nuntium.fhooe.at.nuntium.room.conversation.Conversation
 import nuntium.fhooe.at.nuntium.room.message.Message
 import nuntium.fhooe.at.nuntium.room.participant.Participant
 import nuntium.fhooe.at.nuntium.utils.Constants
-import nuntium.fhooe.at.nuntium.utils.NuntiumPreferences
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class NetworkDataLoader(private val disposables: CompositeDisposable, private val userId: Int) {
+class NetworkDataLoader(private val disposables: CompositeDisposable, private val userId: Int, private val updatePreference: () -> Unit) {
     private val conversationsService = ConversationsServiceFactory.build()
     private val participantService = ParticipantServiceFactory.build()
     private val messagesService = MessagesServiceFactory.build()
@@ -109,7 +104,6 @@ class NetworkDataLoader(private val disposables: CompositeDisposable, private va
         //        })
         //)
     }
-
 
 
     private fun fetchConversationsFromPage(nextPage: Int) {
@@ -221,6 +215,7 @@ class NetworkDataLoader(private val disposables: CompositeDisposable, private va
                 response.body()?.let {
                     val nextPage = if (it.count() < 20) -1 else 1
                     messagesNetworkFetchingFinished(it, nextPage)
+                    updatePreference()
                 }
             }
         })
@@ -255,6 +250,7 @@ class NetworkDataLoader(private val disposables: CompositeDisposable, private va
             override fun onResponse(call: Call<List<Message>>, response: Response<List<Message>>) {
                 Log.i(Constants.LOG_TAG_NETWORK_LOADER, "Fetching messages from page $nextPage successfully")
                 response.body()?.let {
+                    updatePreference()
                     val calcNextPage = if (it.count() < 20) -1 else nextPage + 1
                     messagesNetworkFetchingFinished(it, calcNextPage)
                 }

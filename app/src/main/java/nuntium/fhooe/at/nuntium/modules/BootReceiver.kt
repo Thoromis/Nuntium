@@ -31,6 +31,7 @@ class BootReceiver : BroadcastReceiver() {
                 )
                     .setMinimumLatency(30000)
                     .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                    .setPersisted(true)
                     .build()
             )
         }
