@@ -37,7 +37,7 @@ class IntegrationTest {
 
     @Rule
     @JvmField
-    val rule  = ActivityTestRule(ViewConversationView::class.java)
+    val rule  = ActivityTestRule(ViewConversationView::class.java,false,false)
 
 
     @Test
