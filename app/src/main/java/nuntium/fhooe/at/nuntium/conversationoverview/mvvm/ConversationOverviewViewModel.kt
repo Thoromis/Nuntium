@@ -4,14 +4,12 @@ import android.arch.lifecycle.LiveData
 import android.content.Context
 import nuntium.fhooe.at.nuntium.conversationoverview.ConversationItem
 import nuntium.fhooe.at.nuntium.room.conversation.Conversation
-import nuntium.fhooe.at.nuntium.room.message.Message
-import nuntium.fhooe.at.nuntium.room.participant.Participant
 import nuntium.fhooe.at.nuntium.utils.NuntiumPreferences
 
 class ConversationOverviewViewModel(val view: ConversationOverviewMVVM.View, val context: Context) : ConversationOverviewMVVM.ViewModel {
     override val userParticipantId = NuntiumPreferences.getParticipantId(context)
     private val model: ConversationOverviewMVVM.Model = ConversationOverviewModel(this)
-    override var livedataConversations: LiveData<List<Conversation>>? = null
+    override var liveDataConversations: LiveData<List<Conversation>>? = null
 
     override fun updateFetchPreference() = view.updateFetchPreference()
 
@@ -31,9 +29,8 @@ class ConversationOverviewViewModel(val view: ConversationOverviewMVVM.View, val
         model.onConversationsReceived(conversations)
     }
 
-
     override fun initializeConversationsRecyclerView(conversations: LiveData<List<Conversation>>){
-        livedataConversations = conversations
+        liveDataConversations = conversations
         view.startConversationObservation()
     }
 

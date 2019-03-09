@@ -10,6 +10,7 @@ interface ConversationOverviewMVVM {
         fun addConversationItem(item: ConversationItem)
         fun startConversationObservation()
         fun updateFetchPreference()
+        fun initRecyclerView()
     }
 
     interface Model {
@@ -19,7 +20,7 @@ interface ConversationOverviewMVVM {
 
     interface ViewModel {
         val userParticipantId: Int
-        var livedataConversations:  LiveData<List<Conversation>>?
+        var liveDataConversations:  LiveData<List<Conversation>>?
         fun loadAllConversations()
         fun addConversationToView(item: ConversationItem)
         fun setConversationsOnView(conversations: ArrayList<ConversationItem>)
