@@ -6,4 +6,7 @@
     <color name="errorRed">#cc0000</color>
     <color name="lightGray">@android:color/darker_gray</color>
     <color name="white">@android:color/white</color>
+    <color name="conv_edittext_bg">#A7A7A7</color>
+    <color name="conv_msg_me_bg">#B3FBB3</color>
+    <color name="conv_msg_other_bg">#B2D6F7</color>
 </resources>

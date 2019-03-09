@@ -1,18 +1,20 @@
 package nuntium.fhooe.at.nuntium.viewconversation.mvvm
 
 import android.arch.lifecycle.LiveData
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable
 import nuntium.fhooe.at.nuntium.networking.entity.NetworkMessage
 import nuntium.fhooe.at.nuntium.room.conversation.Conversation
 import nuntium.fhooe.at.nuntium.room.message.Message
 import nuntium.fhooe.at.nuntium.room.participant.Participant
 
+/**
+ * author = tobiasbaumgartner
+ */
 interface ViewConversationMVVM {
     interface View {
         fun initRecyclerView(messages: List<Message>)
         fun initRecyclerView()
         fun startMessagesObservation()
-        fun displayMessage(message: String)
+        fun displayMessage(errorCode : Int)
         fun updateRecyclerView(messages: List<Message>)
         fun setEditTextEmpty()
     }

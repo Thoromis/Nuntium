@@ -1,7 +1,6 @@
 package nuntium.fhooe.at.nuntium.viewconversation.mvvm
 
 import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
 import android.util.Log
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -11,13 +10,15 @@ import io.reactivex.schedulers.Schedulers
 import nuntium.fhooe.at.nuntium.networking.MessagesServiceFactory
 import nuntium.fhooe.at.nuntium.networking.entity.NetworkMessage
 import nuntium.fhooe.at.nuntium.room.DatabaseCreator
-import nuntium.fhooe.at.nuntium.room.conversation.Conversation
 import nuntium.fhooe.at.nuntium.room.message.Message
 import nuntium.fhooe.at.nuntium.utils.Constants
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+/**
+ * author = tobiasbaumgartner
+ */
 class ViewConversationRepository : ViewConversationMVVM.Repository {
 
     private val messageService = MessagesServiceFactory.build()

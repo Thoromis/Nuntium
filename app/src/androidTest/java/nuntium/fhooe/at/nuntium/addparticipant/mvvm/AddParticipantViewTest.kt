@@ -9,8 +9,6 @@ import nuntium.fhooe.at.nuntium.R
 import nuntium.fhooe.at.nuntium.conversationoverview.mvvm.ConversationOverviewView
 import org.junit.After
 import org.junit.Before
-
-import org.junit.Assert.*
 import org.junit.Rule
 import org.junit.Test
 

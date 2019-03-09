@@ -1,14 +1,15 @@
 package nuntium.fhooe.at.nuntium.viewconversation.mvvm
 
 import android.arch.lifecycle.LiveData
-import io.reactivex.disposables.Disposables
 import nuntium.fhooe.at.nuntium.networking.entity.NetworkMessage
 import nuntium.fhooe.at.nuntium.room.message.Message
 
+/**
+ * author = tobiasbaumgartner
+ */
 class ViewConversationModel(private val viewModel: ViewConversationMVVM.ViewModel) : ViewConversationMVVM.Model {
 
     private val repository : ViewConversationMVVM.Repository
-    private var disposable = Disposables.disposed()
     private var networkMessages = mutableListOf<Message>()
 
     init {
@@ -58,7 +59,7 @@ class ViewConversationModel(private val viewModel: ViewConversationMVVM.ViewMode
                 viewModel.displayNoNetworkConnection()
             }
         }
-
+        // fetch messages from next page
         if (nextPage != -1) repository.fetchMessagesFromPage(nextPage) {
             parts, page -> messageNetworkFetchingFinished(parts,page)
         } else {

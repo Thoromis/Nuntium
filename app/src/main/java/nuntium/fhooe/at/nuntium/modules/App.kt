@@ -14,6 +14,7 @@ import nuntium.fhooe.at.nuntium.room.DatabaseCreator
  * author = thomasmaier
  */
 class App : Application() {
+
     override fun onCreate() {
         super.onCreate()
         DatabaseCreator.createDatabase(applicationContext)

@@ -1,3 +1,7 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="conv_edittext_radius">20dp</dimen>
+    <dimen name="conv_msg_radius">10dp</dimen>
+    <dimen name="conv_sendbt_radius">25dp</dimen>
+    <dimen name="conv_sendbt_size">50dp</dimen>
 </resources>

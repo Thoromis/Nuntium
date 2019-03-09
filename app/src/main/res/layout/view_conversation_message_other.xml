@@ -7,7 +7,7 @@
 >
 
     <TextView
-            android:text="TextView"
+            android:text="@string/conv_message_Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:id="@+id/view_conversation_message"
             android:padding="8dp"
@@ -16,15 +16,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:textColor="@android:color/black"
-            android:background="@drawable/message_background_other" tools:ignore="HardcodedText"/>
+            android:background="@drawable/message_background_other"/>
     <TextView
-            android:text="04:20"
+            android:text="@string/conv_message_time"
             android:layout_width="wrap_content"
             android:layout_marginStart="4dp"
             app:layout_constraintBottom_toBottomOf="@id/view_conversation_message"
             app:layout_constraintStart_toEndOf="@id/view_conversation_message"
             android:layout_height="wrap_content" android:id="@+id/view_conversation_time" android:textSize="10sp"
-            tools:ignore="HardcodedText,SmallSp"/>
+            tools:ignore="SmallSp"/>
 
 
 </android.support.constraint.ConstraintLayout>

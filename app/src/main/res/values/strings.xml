@@ -14,4 +14,14 @@
     </string>
     <string name="create_participant_networkcall_message">Sending your data to the server...</string>
     <string name="button_start_conversation">Start Conversation</string>
+    <string name="conv_msgsending_displaynonetwork">You seem to be offline, no sending possible.</string>
+    <string name="conv_edittext_notextentered">No text entered.</string>
+    <string name="conv_nonetworkconnection">You seem to be offline, using locally saved messages.</string>
+    <string name="errorMessageNotFound">404: ErrorMessage not found</string>
+    <string name="conv_toolbar_participantText">Other participant</string>
+    <string name="conv_toolbar_titleText">Title</string>
+    <string name="conv_edittext_hint">Enter text</string>
+    <string name="conv_message_Text">This is a message.</string>
+    <string name="conv_message_time">04:20</string>
+    <string name="conv_toolbar_imageView_description">Image of other participant</string>
 </resources>

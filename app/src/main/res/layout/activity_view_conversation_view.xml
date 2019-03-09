@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent" android:layout_height="match_parent"
               android:orientation="vertical">
 
@@ -18,20 +18,20 @@
                     android:adjustViewBounds="true" android:foregroundGravity="left"
                     tools:srcCompat="@tools:sample/avatars"
                     android:layout_height="50dp" android:layout_width="50dp" android:layout_gravity="center"
-                    android:layout_marginEnd="15dp"/>
+                    android:layout_marginEnd="15dp" android:contentDescription="@string/conv_toolbar_imageView_description"/>
 
             <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
                 <TextView
-                        android:text="Title"
+                        android:text="@string/conv_toolbar_titleText"
                         android:singleLine="true"
                         android:layout_height="wrap_content" android:id="@+id/view_conversation_toolbar_title"
                         android:layout_weight="1" android:textSize="20sp"
                         android:layout_width="match_parent"/>
                 <TextView
-                        android:text="TextView"
+                        android:text="@string/conv_toolbar_participantText"
                         android:singleLine="true"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" android:id="@+id/view_conversation_toolbar_participant"
@@ -60,7 +60,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:inputType="text|textMultiLine|textCapSentences"
-                android:hint="Enter text"
+                android:hint="@string/conv_edittext_hint"
                 android:background="@drawable/edittext_message_background"
                 android:maxLines="5"
                 android:maxLength="255"
@@ -70,7 +70,7 @@
                 android:layout_marginBottom="10dp"
                 android:paddingStart="20dp" android:textAlignment="viewStart"
                 android:paddingEnd="20dp" android:gravity="center" android:layout_gravity="center"
-                android:foregroundGravity="center" android:layout_marginTop="10dp"/>
+                android:foregroundGravity="center" android:layout_marginTop="10dp" tools:ignore="Autofill"/>
         <Button
                 android:layout_width="50dp"
                 android:layout_height="50dp"

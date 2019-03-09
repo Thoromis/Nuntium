@@ -6,6 +6,9 @@ import nuntium.fhooe.at.nuntium.room.conversation.Conversation
 import nuntium.fhooe.at.nuntium.room.message.Message
 import nuntium.fhooe.at.nuntium.room.participant.Participant
 
+/**
+ * author = tobiasbaumgartner
+ */
 class ViewConversationViewModel(private val view: ViewConversationMVVM.View,
                                 p: Participant,
                                 c: Conversation, id: Int
@@ -42,10 +45,11 @@ class ViewConversationViewModel(private val view: ViewConversationMVVM.View,
 
     override fun startUpFinished() = model.startUpFinished()
 
-    override fun displayNoNetwork() = view.displayMessage("You seem to be offline, no sending possible.")
-    override fun displayNoMessageText() = view.displayMessage("No text entered.")
-    override fun displayNoNetworkConnection() = view.displayMessage("You seem to be offline, using locally saved messages.")
+    override fun displayNoNetwork() = view.displayMessage(1)
 
+    override fun displayNoMessageText() = view.displayMessage(2)
+
+    override fun displayNoNetworkConnection() = view.displayMessage(3)
     override fun recyclerViewDataChanged(messages: List<Message>) = model.recyclerViewDataChanged(messages)
 
     override fun updateRecyclerView(messages: List<Message>) = view.updateRecyclerView(messages)

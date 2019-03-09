@@ -2,8 +2,8 @@
        android:shape="rectangle">
 
     <solid android:color="@color/colorPrimary"/>
-    <size android:width="50dp"
-          android:height="50dp"/>
-    <corners android:radius="25dp">
+    <size android:width="@dimen/conv_sendbt_size"
+          android:height="@dimen/conv_sendbt_size"/>
+    <corners android:radius="@dimen/conv_sendbt_radius">
     </corners>
 </shape>

@@ -6,7 +6,7 @@
                                              android:layout_marginStart="50dp"
 >
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-              android:text="TextView" android:id="@+id/view_conversation_message"
+              android:text="@string/conv_message_Text" android:id="@+id/view_conversation_message"
               android:padding="8dp"
               app:layout_constraintEnd_toEndOf="parent"
               app:layout_constraintTop_toTopOf="parent"
@@ -17,7 +17,7 @@
               android:layout_gravity="right" tools:ignore="HardcodedText,RtlHardcoded"/>
 
     <TextView
-            android:text="04:20"
+            android:text="@string/conv_message_time"
             android:layout_width="wrap_content"
             android:layout_marginEnd="4dp"
             app:layout_constraintBottom_toBottomOf="@id/view_conversation_message"

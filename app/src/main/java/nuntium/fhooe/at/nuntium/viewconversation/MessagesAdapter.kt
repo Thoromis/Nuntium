@@ -7,6 +7,10 @@ import android.view.ViewGroup
 import nuntium.fhooe.at.nuntium.R
 import nuntium.fhooe.at.nuntium.room.message.Message
 
+/**
+ * author = tobiasbaumgartner
+ * Adapter for recyclerView of messages.
+ */
 class MessagesAdapter(private val context: Context, var messages: MutableList<Message>, private val author: Int) :
     RecyclerView.Adapter<MessageViewHolder>() {
 
@@ -20,6 +24,9 @@ class MessagesAdapter(private val context: Context, var messages: MutableList<Me
         messageViewHolder.bind(messages[position])
     }
 
+    /**
+     * Decides, which viewType has to be displayed.
+     */
     override fun getItemViewType(position: Int): Int {
         return if (messages[position].senderId == author) {
             TYPE_MESSAGE_ME

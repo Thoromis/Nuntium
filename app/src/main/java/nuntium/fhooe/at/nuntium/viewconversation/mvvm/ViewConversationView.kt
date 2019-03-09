@@ -24,9 +24,10 @@ import nuntium.fhooe.at.nuntium.room.message.Message
 import nuntium.fhooe.at.nuntium.room.participant.Participant
 import nuntium.fhooe.at.nuntium.utils.NuntiumPreferences
 import nuntium.fhooe.at.nuntium.viewconversation.MessagesAdapter
-import java.util.*
 
-
+/**
+ * author = tobiasbaumgartner
+ */
 class ViewConversationView : AppCompatActivity(), ViewConversationMVVM.View {
 
 
@@ -47,7 +48,7 @@ class ViewConversationView : AppCompatActivity(), ViewConversationMVVM.View {
 
     private fun initMVVM() {
         //viewModel = ViewModelProviders.of(this).get(ViewConversationViewModel::class.java)
-        val participant = intent.getSerializableExtra("receiver")
+        var participant = intent.getSerializableExtra("receiver")
         var conversation = intent.getSerializableExtra("conversation")
 
         viewModel = ViewConversationViewModel(
@@ -107,6 +108,9 @@ class ViewConversationView : AppCompatActivity(), ViewConversationMVVM.View {
         }
     }
 
+    /**
+     * Stores last message and only updates recyclerView, if last message has changed.
+     */
     override fun updateRecyclerView(messages: List<Message>) {
         //Log.i("TEST","inupdateRecyclerView ${messages.size} ${lastMsg.toString()}")
         var updateRequired = false
@@ -137,8 +141,31 @@ class ViewConversationView : AppCompatActivity(), ViewConversationMVVM.View {
         text.setText("")
     }
 
-    override fun displayMessage(message: String) = Snackbar.make(btnSend, message, Snackbar.LENGTH_SHORT).show()
+    /**
+     * Displaying different errorMessages as snackbar.
+     */
+    override fun displayMessage(errorCode : Int) {
+        var message = when(errorCode) {
+            1 -> {
+                getString(R.string.conv_msgsending_displaynonetwork)
+            }
+            2 -> {
+                getString(R.string.conv_edittext_notextentered)
+            }
+            3 -> {
+                getString(R.string.conv_nonetworkconnection)
+            }
+            else -> {
+                getString(R.string.errorMessageNotFound)
+            }
+        }
+        Snackbar.make(btnSend,
+            message, Snackbar.LENGTH_SHORT).show()
+    }
 
+    /**
+     * Finish activity if home in toolbar is being clicked.
+     */
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             android.R.id.home -> {
@@ -149,6 +176,9 @@ class ViewConversationView : AppCompatActivity(), ViewConversationMVVM.View {
         return true
     }
 
+    /**
+     * Extends ImageView by circling an image and adding a border.
+     */
     private fun <T> ImageView.circleImage(uri: T, borderSize: Float) {
         Glide.with(context)
             .asBitmap()
@@ -170,6 +200,9 @@ class ViewConversationView : AppCompatActivity(), ViewConversationMVVM.View {
             })
     }
 
+    /**
+     * Adds border to an round image.
+     */
     private fun Bitmap.addBorder(borderSize: Float): Bitmap {
         val borderOffset = (borderSize * 2).toInt()
         val radius = Math.min(height / 2, width / 2).toFloat()
