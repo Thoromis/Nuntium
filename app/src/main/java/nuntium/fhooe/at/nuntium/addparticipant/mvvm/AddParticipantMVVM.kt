@@ -2,6 +2,9 @@ package nuntium.fhooe.at.nuntium.addparticipant.mvvm
 
 import nuntium.fhooe.at.nuntium.room.participant.Participant
 
+/**
+ * author = thomasmaier
+ */
 interface AddParticipantMVVM {
     interface View {
         fun displayMessage(message: String)
@@ -24,6 +27,7 @@ interface AddParticipantMVVM {
         fun displaySuccessMessage()
         fun displayNetworkCallMessage()
         fun displayNetworkErrorMessage()
+        fun displayServerErrorMessage()
         fun startProgressWheel()
         fun stopProgressWheel()
         fun shakeViews(views: List<Views>)

@@ -12,6 +12,11 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.regex.Pattern
 
+/**
+ * This file contains most of the extension functions of the application, if they are used throughout the application more often.
+ * Only functions that aren't meant to be used outside the creation file shouldn't be in here.
+ * author = thomasmaier
+ */
 
 fun View.shakeErrorView() {
     if (!this.hasFocus()) this.backgroundTintList = ContextCompat.getColorStateList(this.context, R.color.colorAccent)

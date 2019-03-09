@@ -10,6 +10,10 @@ import android.util.Log
 import nuntium.fhooe.at.nuntium.messagepolling.MessagePollingService
 import nuntium.fhooe.at.nuntium.utils.Constants.LOG_TAG
 
+/**
+ * Class that is notified after reboot of the phone;
+ * Schedules the MessagePollingService so user sees messages even after rebooting the device.
+ */
 class BootReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         Log.i(LOG_TAG, "Bootreceiver called.")

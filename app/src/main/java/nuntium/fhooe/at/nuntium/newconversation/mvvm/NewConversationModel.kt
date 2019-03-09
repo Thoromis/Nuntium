@@ -9,9 +9,11 @@ import nuntium.fhooe.at.nuntium.room.conversation.Conversation
 import nuntium.fhooe.at.nuntium.room.participant.Participant
 import nuntium.fhooe.at.nuntium.utils.Constants.LOG_TAG
 
+/**
+ * author = thomasmaier
+ */
 class NewConversationModel(private val viewModel: NewConversationMVVM.ViewModel) : NewConversationMVVM.Model {
     private val repository: NewConversationMVVM.Repository
-    private var disposable = Disposables.disposed()
     private var networkParticipants = mutableListOf<Participant>()
     private var selected: Participant? = null
     private var lastRecyclerViewCreation = mutableListOf<Participant>()
@@ -97,8 +99,10 @@ class NewConversationModel(private val viewModel: NewConversationMVVM.ViewModel)
         }
     }
 
-    private fun participantDatabaseFetchingFinished(participants: LiveData<List<Participant>>) {
-        viewModel.initializeRecyclerView(participants)
+    override fun clear() {
+        repository.clear()
     }
+
+    private fun participantDatabaseFetchingFinished(participants: LiveData<List<Participant>>) = viewModel.initializeRecyclerView(participants)
 }
 

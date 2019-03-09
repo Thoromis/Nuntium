@@ -11,15 +11,10 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Build
-import android.support.v4.app.ActivityManagerCompat
-import android.support.v4.content.ContextCompat
-import android.support.v4.content.ContextCompat.getSystemService
 import android.util.Log
 import io.reactivex.Completable
-import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import nuntium.fhooe.at.nuntium.R
-import nuntium.fhooe.at.nuntium.R.mipmap.ic_launcher_nuntium_round
 import nuntium.fhooe.at.nuntium.conversationoverview.mvvm.ConversationOverviewView
 import nuntium.fhooe.at.nuntium.networking.ConversationsServiceFactory
 import nuntium.fhooe.at.nuntium.networking.MessagesServiceFactory
@@ -34,8 +29,9 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-//To be done for preferences:
-//After each message fetching, the preferences for the fetching time get reset to this time
+/**
+ * Job that is meant to be scheduled every 30 seconds, to fetch new messages from the server and display them in a notification for the user to read.
+ */
 class MessagePollingService : JobService() {
     private val messageFactory = MessagesServiceFactory.build()
     private val conversationFactory = ConversationsServiceFactory.build()
@@ -53,6 +49,9 @@ class MessagePollingService : JobService() {
         return false
     }
 
+    /**
+     * Fetches all conversations on a page, called until all pages are fetched.
+     */
     private fun fetchConversationsOnPage(params: JobParameters?, messages: List<Message>, nextPage: Int) {
         conversationFactory.getConversationsOnPage(nextPage, 20).enqueue(object : Callback<List<Conversation>> {
             override fun onFailure(call: Call<List<Conversation>>, t: Throwable) {
@@ -88,6 +87,9 @@ class MessagePollingService : JobService() {
         })
     }
 
+    /**
+     * Fetches all messages on a page, called until all pages are fetched
+     */
     private fun fetchMessageOnPage(params: JobParameters?, nextPage: Int) {
         messageFactory.getMessagesOnPageForParticipant(nextPage, 20, NuntiumPreferences.getParticipantId(this)).enqueue(object : Callback<List<Message>> {
             override fun onFailure(call: Call<List<Message>>, t: Throwable) {
@@ -128,6 +130,9 @@ class MessagePollingService : JobService() {
             .subscribe()
     }
 
+    /**
+     * Filters out all messages that are after the latest fetch date. Fetch date is the time the user has last seen messages in the application.
+     */
     private fun filterMessages(messages: List<Message>): List<Message> {
         val lastFetchDate = NuntiumPreferences.getLastFetchDate(this@MessagePollingService)
             .parseDate()
@@ -144,6 +149,9 @@ class MessagePollingService : JobService() {
         return messages.filter { message -> filter(message) }
     }
 
+    /**
+     * Reschedules service in 30 seconds, if conditions are met.
+     */
     private fun rescheduleService() {
         val jobScheduler = getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
         jobScheduler.schedule(
@@ -163,6 +171,9 @@ class MessagePollingService : JobService() {
         return runningAppProcesses.any { it.processName == this.packageName && it.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND }
     }
 
+    /**
+     * Displays all messages and conversations in a notification with the app logo.
+     */
     private fun showNotification(messages: List<Message>, convs: List<Conversation>) {
         if (isAppInForeground()) return
 
@@ -224,6 +235,9 @@ class MessagePollingService : JobService() {
     }
 }
 
+/**
+ * Filter all conversation that are included in the messages-list (by conversationId)
+ */
 private fun List<Conversation>.filterConversations(messages: List<Message>): List<Conversation> = filter { conversation ->
     messages.map { it.conversationId }.contains(conversation.id)
 }

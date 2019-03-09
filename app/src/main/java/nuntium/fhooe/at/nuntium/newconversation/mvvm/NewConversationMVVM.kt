@@ -1,15 +1,13 @@
 package nuntium.fhooe.at.nuntium.newconversation.mvvm
 
 import android.arch.lifecycle.LiveData
-import io.reactivex.Completable
-import io.reactivex.Observable
-import io.reactivex.Single
-import nuntium.fhooe.at.nuntium.conversationoverview.mvvm.ConversationOverviewView
 import nuntium.fhooe.at.nuntium.networking.entity.NetworkConversation
 import nuntium.fhooe.at.nuntium.room.conversation.Conversation
 import nuntium.fhooe.at.nuntium.room.participant.Participant
-import retrofit2.Call
 
+/**
+ * author = thomasmaier
+ */
 interface NewConversationMVVM {
     interface View {
         fun initializeRecyclerView(participants: List<Participant>)
@@ -44,6 +42,7 @@ interface NewConversationMVVM {
         fun topicChoosen(topic: String)
         fun cancelDialog()
         fun displayNoNetworkForConversationCreation()
+        fun clear()
     }
 
     interface Model {
@@ -52,6 +51,7 @@ interface NewConversationMVVM {
         fun participantSelected()
         fun recyclerViewDataChanged(participants: List<Participant>)
         fun topicChoosen(topic: String)
+        fun clear()
     }
 
     interface Repository {
@@ -62,5 +62,6 @@ interface NewConversationMVVM {
         fun fetchParticipantsFromPage(nextPage: Int, fetchingFinished: (List<Participant>, Int) -> Unit)
         fun postConversationToServer(conversation: NetworkConversation, taskFinished: (Conversation?) -> Unit)
         fun saveConversationToDatabase(conversation: Conversation)
+        fun clear()
     }
 }

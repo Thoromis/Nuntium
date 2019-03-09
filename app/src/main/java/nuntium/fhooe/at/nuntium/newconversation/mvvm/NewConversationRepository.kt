@@ -18,6 +18,11 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+/**
+ * Repo for doing network and database calls with Retrofit and room.
+ * Provides access to methods for conversation and participant objects.
+ * author = thomasmaier
+ */
 class NewConversationRepository : NewConversationMVVM.Repository {
     private val participantService = ParticipantServiceFactory.build()
     private val disposables: CompositeDisposable = CompositeDisposable()
@@ -32,6 +37,11 @@ class NewConversationRepository : NewConversationMVVM.Repository {
             }
 
             override fun onResponse(call: Call<List<Participant>>, response: Response<List<Participant>>) {
+                if(!response.isSuccessful) {
+                    fetchingFinished(listOf(), -1)
+                    return
+                }
+
                 Log.i(LOG_TAG, "Fetching participants from the server done successfully")
                 response.body()?.let {
                     val nextPage = if (it.count() < 20) -1 else 1
@@ -52,6 +62,11 @@ class NewConversationRepository : NewConversationMVVM.Repository {
             }
 
             override fun onResponse(call: Call<List<Participant>>, response: Response<List<Participant>>) {
+                if(!response.isSuccessful) {
+                    fetchingFinished(listOf(), -1)
+                    return
+                }
+
                 Log.i(LOG_TAG, "Fetching participants from page $nextPage successfully")
                 response.body()?.let {
                     val calcNextPage = if (it.count() < 20) -1 else nextPage + 1
@@ -97,6 +112,11 @@ class NewConversationRepository : NewConversationMVVM.Repository {
             }
 
             override fun onResponse(call: Call<Conversation>, response: Response<Conversation>) {
+                if(!response.isSuccessful) {
+                    taskFinished(null)
+                    return
+                }
+
                 Log.i(LOG_TAG, "Posting conversation was successful")
                 response.body()?.let {
                     taskFinished(it)
@@ -120,4 +140,6 @@ class NewConversationRepository : NewConversationMVVM.Repository {
             .subscribeOn(Schedulers.io())
             .subscribe()
     }
+
+    override fun clear() = disposables.dispose()
 }

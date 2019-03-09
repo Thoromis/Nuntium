@@ -27,6 +27,9 @@ import nuntium.fhooe.at.nuntium.utils.NuntiumPreferences
 import nuntium.fhooe.at.nuntium.utils.shakeErrorView
 import nuntium.fhooe.at.nuntium.viewconversation.mvvm.ViewConversationView
 
+/**
+ * author = thomasmaier
+ */
 class NewConversationView : NewConversationMVVM.View, AppCompatActivity() {
     private lateinit var rvParticipants: RecyclerView
     private lateinit var btSubmit: Button
@@ -42,6 +45,11 @@ class NewConversationView : NewConversationMVVM.View, AppCompatActivity() {
         initializeMvvm()
         initializeViews()
         viewModel?.startUpFinished()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        this.clear()
     }
 
     override fun getCurrentParticipant(): Int {
@@ -130,6 +138,11 @@ class NewConversationView : NewConversationMVVM.View, AppCompatActivity() {
                 input.text.isEmpty() -> input.shakeErrorView()
             }
         }
+    }
+
+    private fun clear() {
+        viewModel?.livedata?.removeObservers(this)
+        viewModel?.clear()
     }
 
     override fun cancelDialog() {

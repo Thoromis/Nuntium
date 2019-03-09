@@ -9,6 +9,9 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+/**
+ * author = thomasmaier
+ */
 class AddParticipantModel(val viewModel: AddParticipantMVVM.ViewModel) : AddParticipantMVVM.Model {
     private val participantService = ParticipantServiceFactory.build()
 
@@ -33,6 +36,10 @@ class AddParticipantModel(val viewModel: AddParticipantMVVM.ViewModel) : AddPart
         }
     }
 
+    /**
+     * Posts a participant to the server, and handle response.
+     * NOTE: Done in model because repo would be overkill for just one small posting method
+     */
     private fun postParticipant(newParticipant: NetworkParticipant) =
         participantService.createParticipant(newParticipant).enqueue(object : Callback<Participant> {
             override fun onFailure(call: Call<Participant>, t: Throwable) {
@@ -45,6 +52,11 @@ class AddParticipantModel(val viewModel: AddParticipantMVVM.ViewModel) : AddPart
             }
 
             override fun onResponse(call: Call<Participant>, response: Response<Participant>) {
+                if(!response.isSuccessful) {
+                    viewModel.displayServerErrorMessage()
+                    return
+                }
+
                 with(viewModel) {
                     displaySuccessMessage()
                     stopProgressWheel()
@@ -53,5 +65,4 @@ class AddParticipantModel(val viewModel: AddParticipantMVVM.ViewModel) : AddPart
                 }
             }
         })
-
 }

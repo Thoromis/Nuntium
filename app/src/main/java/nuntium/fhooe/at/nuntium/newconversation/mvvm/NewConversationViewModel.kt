@@ -4,6 +4,9 @@ import android.arch.lifecycle.LiveData
 import nuntium.fhooe.at.nuntium.room.conversation.Conversation
 import nuntium.fhooe.at.nuntium.room.participant.Participant
 
+/**
+ * author = thomasmaier
+ */
 class NewConversationViewModel(private val view: NewConversationMVVM.View) : NewConversationMVVM.ViewModel {
     override var livedata: LiveData<List<Participant>>? = null
     private val model: NewConversationMVVM.Model
@@ -55,4 +58,6 @@ class NewConversationViewModel(private val view: NewConversationMVVM.View) : New
     override fun topicChoosen(topic: String) = model.topicChoosen(topic)
 
     override fun cancelDialog() = view.cancelDialog()
+
+    override fun clear() = model.clear()
 }

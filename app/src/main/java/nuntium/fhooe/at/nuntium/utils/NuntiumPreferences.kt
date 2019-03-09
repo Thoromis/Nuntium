@@ -2,12 +2,13 @@ package nuntium.fhooe.at.nuntium.utils
 
 import android.content.Context
 import android.util.Log
-import nuntium.fhooe.at.nuntium.modules.App
 import nuntium.fhooe.at.nuntium.room.participant.Participant
 import nuntium.fhooe.at.nuntium.utils.Constants.LOG_TAG
 
+/**
+ * Gives access to shared preferences and provides a set of methods to save/fetch shared preference values.
+ */
 class NuntiumPreferences {
-
     companion object {
         fun insertParticipant(context: Context, participant: Participant) {
             val sharedpreferences = context.getSharedPreferences(SHARED_PREF_KEY, Context.MODE_PRIVATE)

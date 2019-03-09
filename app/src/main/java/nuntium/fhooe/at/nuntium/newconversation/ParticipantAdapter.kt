@@ -7,11 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import kotlinx.android.synthetic.main.participant_list_item.view.*
 import nuntium.fhooe.at.nuntium.R
 import nuntium.fhooe.at.nuntium.room.participant.Participant
 
+/**
+ * author = thomasmaier
+ * Adapter for a recyclerview holding a list of participants and displaying them (either selected or not, hence the pair)
+ */
 class ParticipantAdapter(
     private val context: Context,
     var participants: MutableList<Pair<Participant, Boolean>>,
@@ -59,5 +62,4 @@ class ParticipantAdapter(
     fun getSelectedParticipant() = participants.firstOrNull { it.second }?.first
 }
 
-data class ParticipantViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-}
+data class ParticipantViewHolder(val view: View) : RecyclerView.ViewHolder(view)

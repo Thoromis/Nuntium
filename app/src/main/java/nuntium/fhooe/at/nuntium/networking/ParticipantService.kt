@@ -6,6 +6,10 @@ import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
 
+/**
+ * Network calls for participant creation, fetching, ...
+ * NOTE: Some methods are unused currently, but supported by the server, and may be needed in the future.
+ */
 interface ParticipantService {
 
     @Headers("content-type: application/json")
@@ -23,9 +27,6 @@ interface ParticipantService {
     @Headers("content-type: application/json")
     @GET("api/participants/{id}")
     fun getParticipantById(@Path("id") id: Int): Call<Participant>
-
-    @GET
-    fun getProfilePicture(@Url url: String): Call<String>
 
     @Headers("content-type: application/json")
     @GET("api/participants/count")

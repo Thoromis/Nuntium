@@ -4,6 +4,9 @@ import android.content.Context
 import nuntium.fhooe.at.nuntium.R
 import nuntium.fhooe.at.nuntium.room.participant.Participant
 
+/**
+ * author = thomasmaier
+ */
 class AddParticipantViewModel(val view: AddParticipantMVVM.View, val context: Context) :
     AddParticipantMVVM.ViewModel {
 
@@ -25,17 +28,15 @@ class AddParticipantViewModel(val view: AddParticipantMVVM.View, val context: Co
         if (email.isEmpty()) null else email
     )
 
-    override fun displayNetworkCallMessage() =
-        view.displayMessage(context.getString(R.string.create_participant_networkcall_message))
+    override fun displayNetworkCallMessage() = view.displayMessage(context.getString(R.string.create_participant_networkcall_message))
 
-    override fun displayNetworkErrorMessage() =
-        view.displayMessage(context.getString(R.string.create_participant_internet_error_message))
+    override fun displayNetworkErrorMessage() = view.displayMessage(context.getString(R.string.create_participant_internet_error_message))
 
-    override fun displayErrorMessage() =
-        view.displayMessage(context.getString(R.string.create_participant_error_message))
+    override fun displayErrorMessage() = view.displayMessage(context.getString(R.string.create_participant_error_message))
 
-    override fun displaySuccessMessage() =
-        view.displayMessage(context.getString(R.string.create_participant_success_message))
+    override fun displaySuccessMessage() = view.displayMessage(context.getString(R.string.create_participant_success_message))
+
+    override fun displayServerErrorMessage() = view.displayMessage(context.getString(R.string.create_participant_server_error_message))
 
     override fun saveParticipant(newParticipant: Participant) = view.saveParticipant(newParticipant)
 

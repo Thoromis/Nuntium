@@ -9,6 +9,10 @@ import android.provider.ContactsContract
 import nuntium.fhooe.at.nuntium.messagepolling.MessagePollingService
 import nuntium.fhooe.at.nuntium.room.DatabaseCreator
 
+/**
+ * Application class that creates a singleton instance of the database for the application to use.
+ * author = thomasmaier
+ */
 class App : Application() {
     override fun onCreate() {
         super.onCreate()

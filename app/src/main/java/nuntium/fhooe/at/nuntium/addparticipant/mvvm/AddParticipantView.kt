@@ -16,6 +16,9 @@ import nuntium.fhooe.at.nuntium.room.participant.Participant
 import nuntium.fhooe.at.nuntium.utils.NuntiumPreferences
 import nuntium.fhooe.at.nuntium.utils.shakeErrorView
 
+/**
+ * author = thomasmaier
+ */
 class AddParticipantView : AppCompatActivity(), AddParticipantMVVM.View {
     private lateinit var viewModel: AddParticipantMVVM.ViewModel
     private var btSubmit: Button? = null
