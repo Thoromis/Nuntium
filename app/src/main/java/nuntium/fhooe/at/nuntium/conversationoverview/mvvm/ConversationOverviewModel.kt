@@ -13,16 +13,22 @@ import nuntium.fhooe.at.nuntium.room.conversation.Conversation
 import nuntium.fhooe.at.nuntium.utils.Constants.LOG_TAG
 import java.util.concurrent.TimeUnit
 
-class ConversationOverviewModel(val viewModel: ConversationOverviewMVVM.ViewModel) :
+/**
+ * Model of the conversation overview (fetches data from the network into the database and updates the data of the view)
+ */
+class ConversationOverviewModel(private val viewModel: ConversationOverviewMVVM.ViewModel) :
     ConversationOverviewMVVM.Model {
 
     private val disposables: CompositeDisposable = CompositeDisposable()
     private val networkDataLoader: NetworkDataLoader = NetworkDataLoader(disposables, viewModel.userParticipantId) { viewModel.updateFetchPreference() }
 
-
+    /**
+     * Called when the conversations got read out of the database. For each conversation the last message and the
+     * conversation-partner is read an added to the conversation list, which is the data of the recyclerview.
+     */
     override fun onConversationsReceived(conversations: List<Conversation>) {
         val conversationItemList = mutableListOf<ConversationItem>()
-        val disposable = Completable.fromAction {
+        disposables.add(Completable.fromAction {
             conversations.forEach {
                 DatabaseCreator.database.messageDaoAccess().getLastMessageFromConversationById(it.id)?.let { message ->
                     val senderId = message.senderId
@@ -30,6 +36,7 @@ class ConversationOverviewModel(val viewModel: ConversationOverviewMVVM.ViewMode
                     val userId = viewModel.userParticipantId
                     // check if the partner is the sender or receiver id, leave if it is none
                     var partnerId = senderId
+                    //  the message fits to the conversationId, but the current user is no sender or receiver
                     if (receiverId != userId && senderId != userId)
                         return@let
                     if (senderId == userId) {
@@ -46,10 +53,26 @@ class ConversationOverviewModel(val viewModel: ConversationOverviewMVVM.ViewMode
                     Log.i(LOG_TAG, "${item.conversation.topic} ; ${item.conversationPartner.email} ; ${item.lastMessage.content} ")
                     viewModel.addConversationToView(item)
                 }
-            }
+            })
     }
 
-    fun loadAllConversationsFromDatabase() {
+    /**
+     * Starts periodically updating the database with serverdata and loads data from the database into the recyclerview.
+     */
+    override fun loadAllConversationsForUser() {
+        disposables.add(Observable.create<Unit> {
+            Schedulers.newThread().schedulePeriodicallyDirect({
+                networkDataLoader.fetchAllData()
+            }, 0, 2000, TimeUnit.MILLISECONDS)
+        }.subscribe())
+
+        loadAllConversationsFromDatabase()
+    }
+
+    /**
+     * Load the conversations from the database and subscribe the recyclerview for it.
+     */
+    private fun loadAllConversationsFromDatabase() {
         disposables.add(
             Observable.just(
                 DatabaseCreator.database.conversationDaoAccess().getAllConversations()
@@ -59,21 +82,10 @@ class ConversationOverviewModel(val viewModel: ConversationOverviewMVVM.ViewMode
                 .subscribe({
                     Log.i(LOG_TAG, "Conversations fetched from database...")
                     viewModel.initializeConversationsRecyclerView(it)
-                    //fetchingConversationsFromDbFinished(it)
                 }, {
                     Log.i(LOG_TAG, "Error while fetching conversations from the database...")
                     it.printStackTrace()
                 })
         )
-    }
-
-    override fun loadAllConversationsForUser() {
-        disposables.add(Observable.create<Unit> {
-            Schedulers.newThread().schedulePeriodicallyDirect({
-                networkDataLoader.fetchAllData()
-            }, 0, 2000, TimeUnit.MILLISECONDS)
-        }.subscribe())
-
-        loadAllConversationsFromDatabase()
     }
 }

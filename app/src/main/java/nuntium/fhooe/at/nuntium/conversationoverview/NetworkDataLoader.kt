@@ -16,16 +16,17 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+/**
+ * Loads the conversations, participants and messages from the network and updates the database.
+ */
 class NetworkDataLoader(private val disposables: CompositeDisposable, private val userId: Int, private val updatePreference: () -> Unit) {
     private val conversationsService = ConversationsServiceFactory.build()
     private val participantService = ParticipantServiceFactory.build()
     private val messagesService = MessagesServiceFactory.build()
 
-    private var networkParticipants = mutableListOf<Participant>()
-    private var networkMessages = mutableListOf<Message>()
-    private var networkConversations = mutableListOf<Conversation>()
-
-
+    /**
+     * Fetch all the data from the server and update the database with it.
+     */
     fun fetchAllData() {
         // fetch Conversations
         fetchAllConversationsFromNetwork()
@@ -35,6 +36,10 @@ class NetworkDataLoader(private val disposables: CompositeDisposable, private va
         fetchAllMessagesFromNetwork()
     }
 
+    /**
+     * Fetches the first page of the conversations from the server, then calculates based on the amount of fetched items (max. 20/page) if a
+     * next page needs to be fetched and fetches it if necessary.
+     */
     private fun fetchAllConversationsFromNetwork() {
         conversationsService.getAllConversations().enqueue(object : Callback<List<Conversation>> {
             override fun onFailure(call: Call<List<Conversation>>, t: Throwable) {
@@ -53,59 +58,30 @@ class NetworkDataLoader(private val disposables: CompositeDisposable, private va
         })
     }
 
+    /**
+     * One page of data got fetched from the server and is now updated in the database. If the nextpage is not -1 another page
+     * is fetched.
+     */
     private fun conversationNetworkFetchingFinished(conversations: List<Conversation>, nextPage: Int) {
         //filter logged in user
         when {
             !conversations.isEmpty() -> {
                 updateConversationsInDatabase(conversations)
-                networkConversations.addAll(conversations)
             }
             else -> {
                 //Tell user data is local via Viewmodel
                 Log.i(Constants.LOG_TAG_NETWORK_LOADER, "Working locally, internet connection seems to not work out...")
-                //viewModel.displayNoNetwork()
             }
         }
 
         //Fetch participants from next page if needed
-        if (nextPage != -1) {
+        if (nextPage != -1)
             fetchConversationsFromPage(nextPage)
-        } else {
-            // finished fetching data and updated
-            // check if something is to delete in the database
-
-            syncConversationsWithDatabase()
-        }
     }
 
-    private fun syncConversationsWithDatabase() {
-        //disposables.add(
-        //    Observable.just(
-        //        DatabaseCreator.database.conversationDaoAccess().getAllConversations()
-        //    )
-        //        .subscribeOn(Schedulers.io())
-        //        .observeOn(AndroidSchedulers.mainThread())
-        //        .subscribe({
-        //            it.value?.let { databaseConversations ->
-        //                val toDelete = databaseConversations.filter { conversation ->
-        //                    networkConversations.map { networkConversation -> networkConversation.id }
-        //                        .contains(conversation.id)
-        //                }
-        //                Completable.fromAction {
-        //                    toDelete.forEach { toDelete ->
-        //                        DatabaseCreator.database.conversationDaoAccess().deleteConversation(toDelete)
-        //                    }
-        //                }
-        //                    .subscribeOn(Schedulers.io())
-        //                    .subscribe()
-        //            }
-        //        }, {
-        //            it.printStackTrace()
-        //        })
-        //)
-    }
-
-
+    /**
+     * Fetch the conversations from the given page and calculate the next page.
+     */
     private fun fetchConversationsFromPage(nextPage: Int) {
         Log.i(Constants.LOG_TAG_NETWORK_LOADER, "Fetching conversations from page $nextPage")
 
@@ -126,6 +102,9 @@ class NetworkDataLoader(private val disposables: CompositeDisposable, private va
         })
     }
 
+    /**
+     * Update the conversation data in the database.
+     */
     private fun updateConversationsInDatabase(conversations: List<Conversation>) {
         disposables.add(Completable.fromAction {
             conversations.forEach { singleConversation ->
@@ -164,7 +143,6 @@ class NetworkDataLoader(private val disposables: CompositeDisposable, private va
             else -> {
                 //Tell user data is local via Viewmodel
                 Log.i(Constants.LOG_TAG_NETWORK_LOADER, "Working locally, internet connection seems to not work out...")
-                //viewModel.displayNoNetwork()
             }
         }
 
