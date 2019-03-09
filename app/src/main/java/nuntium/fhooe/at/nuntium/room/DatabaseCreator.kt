@@ -9,11 +9,13 @@ import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
- * object that provides a single database instance for the whole application to use. 
+ * object that provides a single database instance for the whole application to use.
  */
+
 object DatabaseCreator {
     private var disposable = Disposables.disposed()
     lateinit var database: NuntiumDatabase
+        @Synchronized get
 
     fun createDatabase(context: Context) {
         disposable = Completable.fromAction {
@@ -30,6 +32,4 @@ object DatabaseCreator {
     fun clear() {
         disposable.dispose()
     }
-
-    fun isDatabaseCreated() = DatabaseCreator::database.isInitialized
 }
