@@ -12,7 +12,7 @@
             android:layout_height="wrap_content" android:id="@+id/view_conversation_message"
             android:padding="8dp"
             android:layout_margin="8dp"
-            android:maxWidth="325dp"
+            android:maxWidth="300dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:textColor="@android:color/black"
